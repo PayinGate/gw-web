@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,80 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+:root {
+  --transition: all 300ms ease;
+}
+
+@layer utilities {
+  @font-face {
+    font-family: Bebas Neue;
+    font-weight: 400;
+    src: url(/src/assets/fonts/BebasNeue-Regular.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Manrope;
+    src: url(/src/assets/fonts/Manrope-VariableFont_wght.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: DM Sans;
+    src: url(/src/assets/fonts/DMSans-VariableFont_opsz.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: inter;
+    src: url(/src/assets/fonts/Inter-VariableFont_slnt\,wght.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Archivo;
+    src: url(/src/assets/fonts/Archivo-Bold.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Rubik;
+    src: url(/src/assets/fonts/Rubik-VariableFont_wght.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: CircularStd;
+    src: url(/src/assets/fonts/CircularStd-Bold.ttf) format("truetype");
+    src: url(/src/assets/fonts/CircularStd-Medium.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Poppins;
+    src: url(/src/assets/fonts/Poppins-Regular.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Lato;
+    src: url(/src/assets/fonts/Lato-Regular.ttf) format("truetype"), url(/src/assets/fonts/Lato-Bold.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: satoshi;
+    src: url(/src/assets/fonts/Satoshi-Variable.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: ClashDisplay;
+    src: url(/src/assets/fonts/ClashDisplay-Variable.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Outfit;
+    src: url(/src/assets/fonts/Outfit-VariableFont_wght.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: Futura;
+    src: url(/src/assets/fonts/Futura-Std-Book.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: NeurialGrotesk;
+    font-weight: normal;
+    src:  url(/src/assets/fonts/NeurialGrotesk-Regular.otf) format("opentype");
+  }
+  @font-face {
+    font-family: NeurialGrotesk;
+    font-weight: bold;
+    src:  url(/src/assets/fonts/NeurialGrotesk-Bold.otf) format("opentype");
+  }
+  @font-face {
+    font-family: NeurialGrotesk;
+    font-weight: 500;
+    src:  url(/src/assets/fonts/NeurialGrotesk-Medium.otf) format("opentype");
+  }
 }
