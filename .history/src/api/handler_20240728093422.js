@@ -2,7 +2,7 @@ import axios from 'axios';
 
 class API {
   constructor(baseURL) {
-    this.baseURL = 'http://localhost:3000';
+    this.baseURL = 'http://127.0.0.1:3000';
     this.get = this.get.bind(this);
     this.post = this.post.bind(this);
   }

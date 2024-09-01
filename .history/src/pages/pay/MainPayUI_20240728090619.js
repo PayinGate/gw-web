@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import "./../../assets/styles/loader.css";
 import { DarkModeToggle } from "../../components/dark-toggle";

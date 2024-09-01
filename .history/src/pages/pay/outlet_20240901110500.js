@@ -34,7 +34,7 @@ export { TRANSACTION_STATES };
 
 
 
-export default function PayOutlet(){
+export default function PayOutlet(props){
     const { loading, error, get } = useAPI();
     const { id } = useParams();
     const [ showLoading, setShowLoading ] = useState(true);
@@ -45,11 +45,16 @@ export default function PayOutlet(){
     useEffect(() => {
         const fetchData = async ( isRecurring = false ) => {
             try {
-                if(isRecurring) setShowLoading(false);
+                if(isRecurring && error){
+                    setShowLoading(true);
+                }
                 const response = await get('/api/p/transaction/fetch', { reference: id });
                 dispatch(store(response.data));
             } catch (error) {
                 console.error('Error: ', error);
+            }
+            finally {
+                setShowLoading(false);
             }
         }
     
@@ -57,7 +62,7 @@ export default function PayOutlet(){
     
         const interval = setInterval(() => {
             fetchData(true);
-        }, 10000); // fetch the data every 10s
+        }, 10000); // fetch the data every 30s
     
         return () => clearInterval(interval);
     
@@ -67,7 +72,8 @@ export default function PayOutlet(){
 
     return (
     <div className="w-full h-full overflow-hidden">
-        { loading && showLoading ? <PageLoading /> : (Object.keys(transactionData).length === 0  ? <>Error</> :  <MainPayUI /> ) }
+        {        console.log(loading, showLoading)}
+        { showLoading ? <PageLoading /> : (error && Object.keys(transactionData).length === 0  ? <>Error</> :  <MainPayUI /> ) }
     </div>);
 }
 

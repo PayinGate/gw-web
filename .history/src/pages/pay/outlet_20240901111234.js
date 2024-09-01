@@ -57,7 +57,7 @@ export default function PayOutlet(){
     
         const interval = setInterval(() => {
             fetchData(true);
-        }, 10000); // fetch the data every 10s
+        }, 10000); // fetch the data every 30s
     
         return () => clearInterval(interval);
     
@@ -67,7 +67,8 @@ export default function PayOutlet(){
 
     return (
     <div className="w-full h-full overflow-hidden">
-        { loading && showLoading ? <PageLoading /> : (Object.keys(transactionData).length === 0  ? <>Error</> :  <MainPayUI /> ) }
+        { console.log(error,Object.keys(transactionData).length ) }
+        { loading && showLoading ? <PageLoading /> : (error && Object.keys(transactionData).length === 0  ? <>Error</> :  <MainPayUI /> ) }
     </div>);
 }
 

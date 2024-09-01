@@ -57,7 +57,7 @@ export default function PayOutlet(){
     
         const interval = setInterval(() => {
             fetchData(true);
-        }, 10000); // fetch the data every 10s
+        }, 10000); // fetch the data every 30s
     
         return () => clearInterval(interval);
     
