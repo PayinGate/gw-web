@@ -24,6 +24,8 @@ function CreateAddressUI() {
     const [ rates, setRates ] = useState(null);
     const [ chainsInfo, storeChainsInfo ] = useState([]);
 
+    const [ useDefaultRateDisplay, setRateDisplay ] = useState(true);
+
 
     const [ refreshCount, setRefreshCount ] = useState(10);
 
@@ -46,7 +48,7 @@ function CreateAddressUI() {
              return {key: value.coin, name: value.coin}
         }) || {}
 
-        if(options.length > 1) {
+        if(options.length >= 1) {
             setCoinOptions(coinOptions.concat(options));
         } // select chain stands as one
         else {
@@ -129,13 +131,21 @@ function CreateAddressUI() {
             }
             try {
                 const response = await postGenAddy('/api/p/transaction/generate-address', postParams);
-                if(response["success"] === "success"){
+                if(response["success"] === true){
                     dispatch(store(response));
                 }
             }
             catch(error) {
                 console.error('Error: ', error);
-                toast(errorGenAddy.message, {
+                let message;
+                if(errorGenAddy.message){
+                    message = errorGenAddy.message;
+                }
+                else {
+                    message = "Error fetching rate. Check internet connection";
+                }
+                console.log(message);
+                toast(message, {
                     position: "bottom-right",
                     autoClose: 2000,
                     hideProgressBar: true,
@@ -165,7 +175,10 @@ function CreateAddressUI() {
             }
         }, 1000)
 
-        return () => clearInterval(refreshTimer);
+        return () => {
+            setRefreshCount(10);
+            clearInterval(refreshTimer);
+        }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedCoin])
 
@@ -209,7 +222,12 @@ function CreateAddressUI() {
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col space-y-[-2px]">
                             <div className="font-futura text-[12px] font-bold text-[#656565] dark:text-[#bebebe]">Rate</div>
-                            <div className="text-[13px] font-CircularStd text-[#4f4f4f] dark:text-[#bebebe] uppercase">1 {rates.convert_from} = { rates.rate } {rates.convert_to}</div>
+                            <div className="flex items-center text-[13px] font-CircularStd text-[#4f4f4f] dark:text-[#bebebe] uppercase hover:border-b-[0.5px] py-[0.4px] w-fit cursor-pointer select-none" 
+                                onClick={()=>setRateDisplay(!useDefaultRateDisplay)}>
+                                    <div className="currency_from uppercase">1 { useDefaultRateDisplay ? rates.convert_from : rates.convert_to}</div>
+                                    <div className="switch-rate"></div>
+                                    <div className="currency_to uppercase">{useDefaultRateDisplay ? rates.rate : (1/rates.rate)} {useDefaultRateDisplay ? rates.convert_to : rates.convert_from}</div>
+                                </div>
                         </div>
                         <div className="flex flex-col space-y-[-2px]">
                             <div className="font-futura text-[12px] font-bold text-[#656565] dark:text-[#bebebe]">Pay Amount</div>

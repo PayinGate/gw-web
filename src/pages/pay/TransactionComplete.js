@@ -19,13 +19,13 @@ function TransactionCompleteUI(props) {
             title: "Deposit Address",
             key: "deposit_address",
             external_link: true,
-            link: ""
+            link: "https://explorer.solana.com/address/"
         },
         {
             title: "Transaction hash",
             key: "onchain_transaction_hash",
             external_link: true,
-            link: ""   
+            link: "https://explorer.solana.com/tx/"   
         },
         {
             title: "Status",
@@ -106,7 +106,7 @@ function TransactionCompleteUI(props) {
                                     <div className="text-[13px] font-CircularStd flex items-center gap-0">
                                         <span>{ detail.isDate ? dateTime(detailValue) : ( detailValue.length > 25 ? clipText(detailValue, 12) : detailValue )}</span>
                                         {detail.external_link && 
-                                            <a href={detail.link} target="_blank" rel="noreferrer" className="p-2">
+                                            <a href={`${detail.link}${detailValue}?cluster=devnet`} target="_blank" rel="noreferrer" className="p-2">
                                                 <span><TbExternalLink /></span>
                                             </a>
                                         }
