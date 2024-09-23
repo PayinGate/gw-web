@@ -1,14 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import Pay from "../pages/pay/pay";
-import PayOutlet from "../pages/pay/outlet";
-import FontsDisplay from "../fonts";
+import Portal from "../pages/portal/portal";
+import Login from "../pages/portal/auth/login";
 
 export default function Router(){
     return (
         <Routes>
-            <Route index path="/" element={<FontsDisplay />} />
-            <Route path="/pay" element={<Pay />} >
-                <Route path=":id" element={<PayOutlet />} />
+            <Route path="/" element={<Portal />} >
+                <Route index path="/login" element={<Login />} />
             </Route>
         </Routes>
     );
