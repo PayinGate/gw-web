@@ -33,7 +33,7 @@ function darkModeHandler(){
       }
 }
 
-export function DarkModeToggle() {
+export function DarkModeToggle({showToggle = true}) {
 
     const [ darkMode, setDarkMode ] = useState(() => JSON.parse(localStorage.getItem("darkMode")) ?? (window.matchMedia('(prefers-color-scheme: dark)').matches || false));
 
@@ -63,13 +63,40 @@ export function DarkModeToggle() {
 
 
     return (
-        <div className='mode-toggle p-1'>
-            <button onClick={toggleMode}>
+      showToggle && <div className='mode-toggle p-1'>
+             <button onClick={toggleMode}>
                 {
                     darkMode ? <TbSunFilled fontSize={15} title={cst.lightMode} />
                             :  <IoMoonSharp fontSize={15} title={cst.darkMode} />
                 }
-            </button>
-        </div>
+            </button> 
+        </div> 
     );
+}
+
+
+export function DarkModeButtonOnly(){
+  const [ darkMode, setDarkMode ] = useState(() => JSON.parse(localStorage.getItem("darkMode")) ?? (window.matchMedia('(prefers-color-scheme: dark)').matches || false));
+
+    const toggleMode = () => {
+        setDarkMode(()=>{
+            const isDarkMode = JSON.parse(localStorage.getItem("darkMode")) ?? window.matchMedia('(prefers-color-scheme: dark)').matches;
+            localStorage.setItem("darkMode", !isDarkMode);
+            return !isDarkMode;  
+        })
+    }
+
+    useEffect(() => {
+      darkModeHandler();
+    }, [darkMode]);
+
+  return (
+     <button onClick={toggleMode}>
+              {
+                  darkMode ? <TbSunFilled fontSize={15} title={cst.lightMode} />
+                          :  <IoMoonSharp fontSize={15} title={cst.darkMode} />
+              }
+      </button> 
+      
+  );
 }
