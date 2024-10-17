@@ -25,7 +25,8 @@ const TRANSACTION_STATES = [
     {key: "initialized", value: "Initialized"},
     {key: "awaiting_payment", value: "Awaiting payment"},
     {key: "awaiting_confirmation", value: "Confirming"},
-    {key: "completed", value: "Complete"} 
+    {key: "completed", value: "Complete"},
+    {key: "cancelled", value: "Cancelled"}
 ]
 
 

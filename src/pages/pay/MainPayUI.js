@@ -126,6 +126,10 @@ function MainPayUI(props) {
         }, 2000)
     }
 
+    useEffect(()=>{
+        console.log(status);
+    }, [status])
+
     switch(status) {
         case "initialized":
             return <TransactionUIWrapper>
@@ -135,6 +139,8 @@ function MainPayUI(props) {
             return  <TransactionUIWrapper>
                         <TransactionCompleteUI />
                     </TransactionUIWrapper>
+        case "cancelled":
+            return <>cancelled</>
         default:
             return (
                 <div className="w-full h-full flex flex-col space-y-3">
