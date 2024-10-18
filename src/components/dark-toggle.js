@@ -90,6 +90,22 @@ export function DarkModeButtonOnly(){
       darkModeHandler();
     }, [darkMode]);
 
+    useEffect(()=>{
+      window.addEventListener('keyup', keyListener);
+
+      return ()=>window.removeEventListener('keyup', keyListener)
+    });
+
+    /**
+     * 
+     * @param {KeyboardEvent} e 
+     */
+    const keyListener = (e) => {
+      if(e.code === 'KeyD' && !e.target.value) {
+        toggleMode();
+      }
+    }
+
   return (
      <button onClick={toggleMode}>
               {

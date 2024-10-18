@@ -10,8 +10,10 @@ export default function AppMain(){
             <TopBar />
             <div className="flex h-full">
                 <SideBar />
-                <div className="md:h-full top-[52px] flex-1 relative flex-grow min-w-0 overflow-y-scroll">
-                    <Outlet />
+                <div className="md:h-full top-[52px] pl-[14rem] flex-1 fixed flex-grow min-w-0 overflow-y-scroll w-full">
+                    <div className="min-h-full w-full p-3 relative overflow-auto">
+                        <Outlet />
+                    </div>
                 </div>
             </div>
         </div>
