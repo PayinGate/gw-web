@@ -72,10 +72,10 @@
 }
 
 @keyframes awaitingAnimation {
-  0% {
-    background-color: #ffa6003b;
+  0%, 100% {
+    background-color: #3a37323b;
   }
-  100% {
+  50% {
     background-color: #FFA500;
   }
 }

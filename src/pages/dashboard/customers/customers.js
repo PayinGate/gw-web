@@ -65,7 +65,7 @@ export function CustomersTable() {
                 <tbody className="">
                     {rows?.customers?.map((customer, key)=>{
                         const lastTransactionDate = customer.last_transaction && new Date(customer.last_transaction).toDateString();
-                        return <tr key={key} className="font-medium font-inter text-[13px] border-t-[1px] border-t-[#66676a2e] cursor-pointer hover:bg-[#e5e5e538] text-[#212121de] dark:text-[#c1c1c1]"
+                        return <tr key={key} className="font-medium font-inter text-[13px] border-t-[1px] border-t-[#66676a2e] cursor-pointer hover:bg-[#e5e5e538] dark:hover:bg-[#39393938] text-[#212121de] dark:text-[#c1c1c1]"
                                    onClick={()=>{ navigate(`/customers/${customer.id}`) }}>
                             <td className="py-2 w-[50px]"><input type="checkbox" /></td>
                             <td className="capitalize py-2">{customer.name}</td>

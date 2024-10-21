@@ -7,10 +7,10 @@ class API {
     this.post = this.post.bind(this);
   }
 
-  async get(url, params = {}) {
+  async get(url, params = null) {
     try {
-      const response = await axios.get(`${this.baseURL}${url}`, {
-        params: params,
+      const queryParams = new URLSearchParams(params);
+      const response = await axios.get(`${this.baseURL}${url}${queryParams ? `?${queryParams.toString()}` : ''}`, {
         headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJkZXZpY2VJZCI6IiIsInVzZXJBZ2VudCI6IiIsImlhdCI6MTcyOTI2NjMxMiwiZXhwIjoxNzMxODU4MzEyfQ.4cVm5HgZiR4IfCOmMKZfJ9NBgkcQD5xK0c7lTQ6nju4` }
       } );
       return response.data;

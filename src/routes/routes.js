@@ -6,6 +6,8 @@ import Home from "../pages/dashboard/home/home";
 import Customers, { CustomersTable } from "../pages/dashboard/customers/customers";
 import ViewCustomer, { CustomerTransactionsTable } from "../pages/dashboard/customers/view_customer";
 import ViewTransaction from "../pages/dashboard/transactions/view_transaction";
+import { Transactions, TransactionsTable } from "../pages/dashboard/transactions/transactions";
+import { CustomersTransactions } from "../pages/dashboard/customers/transactions";
 
 export default function Router(){
     const [ loggedIn ] = useState(true);
@@ -24,10 +26,23 @@ export default function Router(){
                     </Route>
                     <Route path='/customers/:id' element={<ViewCustomer />} >
                         <Route path="" element={<CustomerTransactionsTable />}/>
+                        <Route path="refunds" element={<></>}/>
+                        <Route path="disputes" element={<></> }/>
                         <Route path="*" element={<CustomerTransactionsTable />} />
                     </Route>
+                    <Route path="/transactions" element={<Transactions />} >
+                        <Route path="" element={<TransactionsTable/>} />
+                        <Route path="completed" element={<TransactionsTable filterWith={"completed"} />} />
+                        <Route path="pending" element={<TransactionsTable filterWith={"pending"} />} />
+                        <Route path="cancelled" element={<TransactionsTable filterWith={"cancelled"} />}/>
+                    </Route>
                     <Route path="/transactions/:id" element={<ViewTransaction />} />
-                    <Route path="/customers/:id/transactions" element={<></>} />
+                    <Route path="/customers/:id/transactions" element={<CustomersTransactions />} >
+                        <Route path="" element={<TransactionsTable />} />
+                        <Route path="completed" element={<TransactionsTable filterWith={"completed"} />} />
+                        <Route path="pending" element={<TransactionsTable filterWith={"pending"} />} />
+                        <Route path="cancelled" element={<TransactionsTable filterWith={"cancelled"} />}/>
+                    </Route>
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>

@@ -27,8 +27,10 @@ export default function ViewCustomer(){
                     <div className="text-[12px] font-semibold text-[#141414] dark:text-white">{new Date(customer?.created_at).toDateString()}</div>
                 </div>
                 <div className="space-y-[2px] font-inter">
-                    <div className="font-medium text-[13px] text-[#777777]"></div>
-                    <div className="text-[12px] font-semibold text-[#141414] dark:text-white">2%</div>
+                    <div className="font-semibold text-[14px] dark:text-[#d0d0d0] text-[#777777]">Tags</div>
+                    <div className="block font-inter text-[13px]">
+                        {Array.from({length: 6}, ()=>{ return <div className="inline-block m-1 bg-[#09ae032d] p-1 rounded-md w-fit">ABCD iz a tag</div> } )}
+                    </div>
                 </div>
                 <div className="space-y-[3px] font-inter w-[80%]">
                     <div className="font-semibold text-[15px]">Metadata</div>

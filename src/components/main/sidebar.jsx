@@ -2,6 +2,7 @@ import classNames from "classnames"
 import { BiLogoBitcoin } from "react-icons/bi"
 import { BsPeople } from "react-icons/bs"
 import { MdOutlineSpaceDashboard } from "react-icons/md"
+import { RiReceiptLine } from "react-icons/ri"
 import { NavLink } from "react-router-dom"
 
 export default function SideBar(){
@@ -10,6 +11,11 @@ export default function SideBar(){
             title: "Home",
             path: "/home",
             icon: <MdOutlineSpaceDashboard />
+        },
+        {
+            title: "Transactions",
+            path: "/transactions",
+            icon: <RiReceiptLine />
         },
         {
             title: "Customers",
