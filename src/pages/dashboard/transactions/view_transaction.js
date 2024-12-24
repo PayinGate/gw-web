@@ -28,8 +28,8 @@ export default function ViewTransaction(){
                 <span className="font-medium text-[12px] bg-[#d4d4d49f] dark:bg-[#3434349f] py-1 px-2 rounded-lg text-[#828282] dark:text-[#bbbbbb] font-inter cursor-pointer">{transaction?.reference}</span>
             </div>
             <div className="flex w-full gap-20">
-                <div className="w-full flex flex-col gap-6">
-                    <div className="w-[80%]">
+                <div className="w-[45%] flex flex-col gap-6">
+                    <div className="w-full">
                         <div className="w-full rounded-2xl px-4 py-6 border-[1px] shadow-sm flex flex-col gap-3">
                             <div className="space-y-1">
                                 <div className="font-inter font-semibold text-[15px] text-[#595959]">Amount</div>
@@ -52,12 +52,17 @@ export default function ViewTransaction(){
                         </div>
                     </div>
                 </div>
-                <div className="w-full flex flex-col">
-                    <div className="w-full h-full">
+                <div className="w-full flex flex-col gap-5 rounded-lg p-3">
+                    <div className="w-full h-full shadow-sm">
                         chain
                     </div>
-                    <div className="w-full h-full">
-                        logs
+                    <div className="bg-[#282C34]  text-[14px] p-4 rounded-[5px] mb-24" style={{boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"}}>
+                        <div className="">Logs</div>
+                        <div className="font-dmsans font-medium flex flex-col gap-1 text-[#CCCCCC]">
+                            {Array.from({length: 20}).map(()=> 
+                            <div><span className="">{">"}</span> <span className="text-[12px]">09/10/2024 10:54 AM:</span> <span className="text-white">initialized transaction</span></div>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
