@@ -8,6 +8,7 @@ import ViewCustomer, { CustomerTransactionsTable } from "../pages/dashboard/cust
 import ViewTransaction from "../pages/dashboard/transactions/view_transaction";
 import { Transactions, TransactionsTable } from "../pages/dashboard/transactions/transactions";
 import { CustomersTransactions } from "../pages/dashboard/customers/transactions";
+import Tokens from "../pages/settings/tokens";
 
 export default function Router(){
     const [ loggedIn ] = useState(true);
@@ -44,6 +45,9 @@ export default function Router(){
                         <Route path="cancelled" element={<TransactionsTable filterWith={"cancelled"} />}/>
                     </Route>
                     <Route path="*" element={<Home />} />
+                    <Route path="/settings">
+                        <Route path="tokens" element={<Tokens />} />
+                    </Route>
                 </Route>
             </Routes>
         );
