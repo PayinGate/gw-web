@@ -11,7 +11,7 @@ class API {
     try {
       const queryParams = new URLSearchParams(params);
       const response = await axios.get(`${this.baseURL}${url}${queryParams ? `?${queryParams.toString()}` : ''}`, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3MzUwNTU4NzN9.tbwuORMO15JHrD1i4UYYruQOz8GmVKoUswSUIM9IIwc` }
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJkZXZpY2VJZCI6IjU0YzkxZjFjLTlhZTktNDVhYS05ODI1LWMxNjgwMGY3ODgxZiIsInVzZXJBZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDMuMCIsImlhdCI6MTc0MjMxMTkxMCwiZXhwIjoxNzQ0OTAzOTEwfQ.p1oh6fjohcoAxd6-A00yp8wFu_fbwP_crionOkYcG9s` }
       } );
       return response.data;
     } catch (error) {
@@ -25,7 +25,7 @@ class API {
   async post(url, data = {}) {
     try {
       const response = await axios.post(`${this.baseURL}${url}`, data, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3MzUwNTU4NzN9.tbwuORMO15JHrD1i4UYYruQOz8GmVKoUswSUIM9IIwc` }
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJkZXZpY2VJZCI6IjU0YzkxZjFjLTlhZTktNDVhYS05ODI1LWMxNjgwMGY3ODgxZiIsInVzZXJBZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDMuMCIsImlhdCI6MTc0MjMxMTkxMCwiZXhwIjoxNzQ0OTAzOTEwfQ.p1oh6fjohcoAxd6-A00yp8wFu_fbwP_crionOkYcG9s` }
       });
       return response.data;
     } catch (error) {

@@ -86,7 +86,7 @@ const useCustomer = ({id} = {}) => {
     const { get } = useAPI();
     const fetch = async () => {
         try {
-            const response = await get(id ? `/api/p/customer/${id}` : "/api/p/customer/all", []);
+            const response = await get(id ? `/customer/${id}` : "/customer/all", []);
         
             if(response['success'] === true) {
                 return {data : response["data"] };

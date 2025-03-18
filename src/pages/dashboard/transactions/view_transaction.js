@@ -92,7 +92,7 @@ export const useTransaction = ({ref} = {}) => {
             if(from_customer){
                 params.push(['from_customer', from_customer]);
             }
-            const response = await get(ref ? `/api/p/transaction/fetch` : "/api/p/transaction/all", params);
+            const response = await get(ref ? `/transaction/fetch` : "/transaction/all", params);
         
             if(response['success'] === true) {
                 return {data : response["data"] };
