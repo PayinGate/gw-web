@@ -58,7 +58,8 @@ function MainPayUI(props) {
         //currency_price_usd = null,
         amount_to_pay = null,
         //deposit_received_at = null,
-        address_generated_at = 0
+        address_generated_at = 0,
+        coin_contract_address = null
      } = useSelector((state) => state.transaction.transaction);
 
     const [ copyClicked, setCopyClicked ] = useState(false);
@@ -210,11 +211,12 @@ function MainPayUI(props) {
                                     </div>
                                 </div>
                                 <div className="disclamer-warning font-inter text-[12px] font-medium text-[#656565] dark:text-[#bebebe]">Deposit <span className="uppercase font-bold">{amount_to_pay} {coin}</span> to the above address to complete transaction.</div>
+                                {coin_contract_address ? <div className="disclamer-warning font-inter text-[13px] text-[#656565] dark:text-[#bebebe] font-bold">CA: <span className="">{coin_contract_address}</span> </div> : <></> }
                             </div>
                         </div>
                         <div className="mt-auto w-full flex justify-between items-end">
                             <div className=" font-CircularStd text-[13px]">
-                                <span className="font-Bebas tracking-wider">client:</span> foodlr.co
+                                <span className="font-Bebas tracking-wider">client:</span> \Client{}\
                             </div>
                             <StatusUI />
                         </div>
