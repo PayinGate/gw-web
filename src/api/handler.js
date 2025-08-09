@@ -11,7 +11,7 @@ class API {
     try {
       const response = await axios.get(`${this.baseURL}${url}`, {
         params: params,
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3MzUwNTU4NzN9.tbwuORMO15JHrD1i4UYYruQOz8GmVKoUswSUIM9IIwc` }
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3NTQ3NzE5NDh9.6BF-c7__3kl7-knloukwyMuVShe2ublSdm1xldCnsHY` }
       } );
       return response.data;
     } catch (error) {
@@ -25,7 +25,7 @@ class API {
   async post(url, data = {}) {
     try {
       const response = await axios.post(`${this.baseURL}${url}`, data, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3MzUwNTU4NzN9.tbwuORMO15JHrD1i4UYYruQOz8GmVKoUswSUIM9IIwc` }
+        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3NTQ3NzE5NDh9.6BF-c7__3kl7-knloukwyMuVShe2ublSdm1xldCnsHY` }
       });
       return response.data;
     } catch (error) {

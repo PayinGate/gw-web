@@ -140,7 +140,7 @@ function CreateAddressUI() {
                 try {
                     const response = await postGenAddy('/api/p/transaction/generate-address', postParams);
                     if(response["success"] === true){
-                        dispatch(store(response));
+                        dispatch(store(response.data));
                         resolve();
                     }
                     else {
