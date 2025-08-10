@@ -2,10 +2,10 @@ import { useState } from 'react';
 import API from '../api/handler';
 
 
-const useAPI = (baseURL) => {
+const useAPI = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const api = new API(baseURL);
+    const api = new API();
 
     const handleRequest = async (requestFn, ...args) => {
         setLoading(true);
@@ -13,27 +13,25 @@ const useAPI = (baseURL) => {
 
         try {
             const response = await requestFn(...args);
-            if (response.error) {
-                setError(response.error.data);
-                throw new Error(response.error.data.message);
-            }
+            // if (response && response.error) {
+            //     setError(response.error.data);
+            //     throw new Error(response.error.data.message);
+            // }
             return response;
         } catch (error) {
-            setError(error);
-            throw error;
+            setError("Error sending request. Try again later.");
+            //throw error;
         } finally {
-            setTimeout(()=>{
-                setLoading(false);
-            }, 1000);
+            setLoading(false);
         }
     };
 
-    const get = async (url, params) => {
-        return handleRequest(api.get, url, params);
+    const get = async (url, params, _usesToken=true) => {
+        return handleRequest(api.get, url, params, { usesToken: _usesToken });
     };
 
-    const post = async (url, data) => {
-        return handleRequest(api.post, url, data);
+    const post = async (url, data, usesToken=true,  usesFormData = true, hasImage=false ) => {
+        return handleRequest(api.post, url, data, usesToken, {usingFormData: usesFormData, hasImage: hasImage});
     };
 
     const put = async (url, data) => {

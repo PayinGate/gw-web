@@ -1,58 +1,136 @@
-import axios from 'axios';
+import { GWCookies } from "../utils/storage/cookies";
+import { baseUrl } from "./base";
+
 
 class API {
-  constructor(baseURL) {
-    this.baseURL = 'http://localhost:3000';
-    this.get = this.get.bind(this);
-    this.post = this.post.bind(this);
-  }
+    constructor() {
+      this.baseUrl = baseUrl;
+      this.get = this.get.bind(this);
+      this.post = this.post.bind(this);
+    }
 
-  async get(url, params = null) {
-    try {
-      const queryParams = new URLSearchParams(params);
-      const response = await axios.get(`${this.baseURL}${url}${queryParams ? `?${queryParams.toString()}` : ''}`, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJkZXZpY2VJZCI6IjU0YzkxZjFjLTlhZTktNDVhYS05ODI1LWMxNjgwMGY3ODgxZiIsInVzZXJBZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDQuMSIsImlhdCI6MTc1NDc3MTIwMiwiZXhwIjoxNzU3MzYzMjAyfQ.EE7VGbBmMQ2m6ixml8Bf0M7sj-DPUUrAHX6WbVgmnDM` }
-      } );
-      return response.data;
-    } catch (error) {
-      if(error.response) {
-        return { error: error.response };
+    #_throwError(error) {
+        throw new Error(error);
+    }
+
+    async _getHeaders(usesToken, { isGetMethod = true, hasImage = false } = {}) {
+        const headers = {};
+        if (!isGetMethod && !hasImage) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        if (usesToken) {
+            try {
+              const cookies = new GWCookies(document);
+              const token = await cookies.getCookie('authToken');
+              headers['Authorization'] = `Bearer ${token}`;
+
+            } catch (error) {
+              console.log(error);
+                throw new Error("Failed to obtain authentication token.");
+            }
+        }
+
+        return headers;
+    }
+
+    checkRequest(response){
+      if(response['auth'] === false){
+        const cookies = new GWCookies(document);
+        cookies.removeAllCookies();
+        localStorage.clear();
+        window.location = "login";
       }
-      throw new Error(`GET request to ${url} failed: ${error.message}`);
     }
-  }
+  
+    async get(endpoint, params, { usesToken = false }) {
+        try {
+          const queryParams = new URLSearchParams(params);
+          const response = await fetch(`${this.baseUrl}${endpoint}?${queryParams.toString()}`, {
+                headers: await this._getHeaders(usesToken),
+            });
 
-  async post(url, data = {}) {
-    try {
-      const response = await axios.post(`${this.baseURL}${url}`, data, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJkZXZpY2VJZCI6IjU0YzkxZjFjLTlhZTktNDVhYS05ODI1LWMxNjgwMGY3ODgxZiIsInVzZXJBZ2VudCI6IlBvc3RtYW5SdW50aW1lLzcuNDQuMSIsImlhdCI6MTc1NDc3MTIwMiwiZXhwIjoxNzU3MzYzMjAyfQ.EE7VGbBmMQ2m6ixml8Bf0M7sj-DPUUrAHX6WbVgmnDM` }
-      });
-      return response.data;
-    } catch (error) {
-      if(error.response) {
-        return { error: error.response };
+            // if (!response.ok) {
+            //   return await response.json();
+            // }
+
+            const responseJSON = await response.json();
+            this.checkRequest(responseJSON);
+
+            return await responseJSON;
+      
+        } catch (error) {
+            if(error.response) {
+              return { error: error.response };
+            }
+            this.#_throwError(`Error during GET request: ${error.message}`);
+
+        }
+    }
+    /**
+     * add usingFormData = false when you're not sending a formdata, it'll change json to a string
+     * @param {string} endpoint 
+     * @param {FormData | JSON} data 
+     * @param {boolean} usesToken 
+     * @param {bool} usingFormdata default true
+     * @returns 
+     */  
+    async post(endpoint, data, usesToken, { usingFormData = true, hasImage = false } = {}) {
+
+      let requestBody;
+      if(!hasImage){
+        if (usingFormData) {
+            requestBody = JSON.stringify(Object.fromEntries(data));;
+        } else {
+            requestBody = JSON.stringify(data);
+        }
       }
-      throw new Error(`POST request to ${url} failed: ${error.message}`);
-    }
-  }
+      else {
+        requestBody = data;
+      }
 
-  async put(url, data = {}) {
-    try {
-      const response = await axios.put(`${this.baseURL}${url}`, data);
-      return response.data;
-    } catch (error) {
-      throw new Error(`PUT request to ${url} failed: ${error.message}`);
-    }
-  }
+        try {
+            const response = await fetch(`${this.baseUrl}${endpoint}`, {
+              method: 'POST',
+              headers: await this._getHeaders(usesToken, { isGetMethod : false, hasImage: hasImage }),
+              body: requestBody
+            });
 
-  async delete(url) {
-    try {
-      const response = await axios.delete(`${this.baseURL}${url}`);
-      return response.data;
-    } catch (error) {
-      throw new Error(`DELETE request to ${url} failed: ${error.message}`);
+            // if (!response.ok) {
+            //   throw new Error(`POST request failed with status: ${response.status}`);
+            // }
+
+            const responseJSON = await response.json();
+            this.checkRequest(responseJSON);
+            return await responseJSON;
+      
+        } catch (error) {
+            if(error.response) {
+              return { error: error.response };
+            }
+            this.#_throwError(`Error during POST request: ${error.message}`);
+
+        }
     }
-  }
+  
+    async options(endpoint) {
+      try {
+        const response = await fetch(`${this.baseUrl}${endpoint}`, {
+          method: 'OPTIONS',
+          headers: await this._getHeaders(true, { isGetMethod : false} )
+        });
+        if (!response.ok) {
+          throw new Error(`OPTIONS request failed with status: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        if(error.response) {
+          return { error: error.response };
+        }
+        throw new Error(`Error during OPTIONS request: ${error.message}`);
+      }
+    }
 }
+   
 
 export default API;

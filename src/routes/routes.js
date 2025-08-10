@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import AppMain from "../pages/dashboard/main";
 import Login from "../pages/dashboard/auth/login";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Home from "../pages/dashboard/home/home";
 import Customers, { CustomersTable } from "../pages/dashboard/customers/customers";
 import ViewCustomer, { CustomerTransactionsTable } from "../pages/dashboard/customers/view_customer";
@@ -9,9 +9,30 @@ import ViewTransaction from "../pages/dashboard/transactions/view_transaction";
 import { Transactions, TransactionsTable } from "../pages/dashboard/transactions/transactions";
 import { CustomersTransactions } from "../pages/dashboard/customers/transactions";
 import Tokens from "../pages/settings/tokens";
+import { GWCookies } from "../utils/storage/cookies";
 
 export default function Router(){
-    const [ loggedIn ] = useState(false);
+    const [ loggedIn, setLoggedIn ] = useState(false);
+    const [ loading, setLoading ] = useState(true);
+
+    useEffect(()=>{
+    
+        const gwCookies = new GWCookies(document);
+        gwCookies.getCookie('authToken')
+            .then((value) => {
+                 setLoggedIn(true); // Set loading to false after authentication check
+
+            })
+            .catch((e) => {
+                //console.log(e);
+                 setLoggedIn(false); // Set loading to false even if there is an error
+            })
+            .finally(()=>{
+                setLoading(false);
+            });
+    }, []);
+
+    if(loading) return <></>;
 
     if(loggedIn){
         return (
