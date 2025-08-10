@@ -11,7 +11,7 @@ import { CustomersTransactions } from "../pages/dashboard/customers/transactions
 import Tokens from "../pages/settings/tokens";
 
 export default function Router(){
-    const [ loggedIn ] = useState(true);
+    const [ loggedIn ] = useState(false);
 
     if(loggedIn){
         return (
@@ -55,6 +55,7 @@ export default function Router(){
     else {
         return <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="*" element={<Login />} />
         </Routes>
     }
 }
