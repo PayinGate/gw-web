@@ -56,7 +56,7 @@ export default function Login(){
         <div className="min-h-screen w-full h-full">
                 <div className="absolute right-0"><DarkModeToggle showToggle={true} /></div>
                 <div className="h-full w-full flex items-center justify-center">
-                    <form className="font-futura flex flex-col gap-4 sm:w-[40%] md:w-[30%] lg:w-[20%]" onSubmit={handleLogin}>
+                    <form className="font-futura flex flex-col gap-4 w-[70%] sm:w-[40%] md:w-[30%] lg:w-[20%]" onSubmit={handleLogin}>
                         <div className="font-inter">
                             <div className={classNames("w-full px-3 py-2.5 bg-[#af1414] mb-0 rounded-lg flex text-white gap-3", {
                                 'hidden': isEmptyString(loginError)
@@ -84,7 +84,7 @@ export default function Login(){
                                 <span className="p-1 cursor-pointer"><BsEyeSlash className="dark:text-white text-gray-800" size={14}/></span>
                             </div>
                         </div>
-                        <div className="text-[13px] font-futura ml-auto text-[#105147] dark:text-[#25b09b] font-semibold">Forgot password?</div>
+                        <div className="text-[12px] sm:text-[13px] font-futura ml-auto text-[#105147] dark:text-[#25b09b] font-semibold">Forgot password?</div>
                         <div className="w-full text-[14px] font-futura font-semibold">
                             <button type="submit" className="w-full p-2 text-white bg-[#25b09b] rounded-[5px]" >Sign In</button>
                         </div>

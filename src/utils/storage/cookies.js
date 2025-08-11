@@ -26,10 +26,10 @@ class GWCookies {
             let cookieValue = `${data.name}=${data.value}; expires=${data.expiryDate.toUTCString()}; path=/`;
 
             // Set SameSite=None if running on localhost
-            if (window.location.hostname !== 'localhost') {
+            // if (window.location.hostname !== 'localhost') {
                 
-                cookieValue += '; SameSite=Strict; Secure'
-            }
+            //     cookieValue += '; SameSite=Strict; Secure'
+            // }
 
             this.document.cookie = cookieValue;
         }
