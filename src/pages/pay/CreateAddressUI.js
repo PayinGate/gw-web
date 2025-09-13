@@ -210,6 +210,8 @@ function CreateAddressUI() {
             try {
                 const response = await postCancel('/api/p/transaction/cancel', postParams);
                 if(response["success"] === true){
+                    const cancelledTrData = {...transactionData, status: "cancelled"};
+                    dispatch(store(cancelledTrData));
                     resolve();
                 } else {
                     reject();
