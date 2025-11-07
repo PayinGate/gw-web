@@ -59,7 +59,9 @@ function MainPayUI(props) {
         amount_to_pay = null,
         //deposit_received_at = null,
         address_generated_at = 0,
-        coin_contract_address = null
+        coin_contract_address = null,
+        merchant = null
+
      } = useSelector((state) => state.transaction.transaction);
 
     const [ copyClicked, setCopyClicked ] = useState(false);
@@ -216,7 +218,7 @@ function MainPayUI(props) {
                         </div>
                         <div className="mt-auto w-full flex justify-between items-end">
                             <div className=" font-CircularStd text-[13px]">
-                                <span className="font-Bebas tracking-wider">client:</span> \Client{}\
+                                <span className="font-Bebas tracking-widest">MERCHANT:</span> <span className="text-gray-900 dark:text-gray-200">{merchant?.name}</span>
                             </div>
                             <StatusUI />
                         </div>
