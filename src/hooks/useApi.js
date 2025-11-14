@@ -28,12 +28,12 @@ const useAPI = (baseURL) => {
         }
     };
 
-    const get = async (url, params) => {
-        return handleRequest(api.get, url, params);
+    const get = async (url, params, { usesToken } = { usesToken: true }) => {
+        return handleRequest(api.get, url, params, { usesToken: usesToken});
     };
 
-    const post = async (url, data) => {
-        return handleRequest(api.post, url, data);
+    const post = async (url, data, { usesToken } = {usesToken: true}) => {
+        return handleRequest(api.post, url, data, { usesToken : usesToken });
     };
 
     const put = async (url, data) => {

@@ -169,7 +169,7 @@ function MainPayUI(props) {
                             <div className="w-full flex flex-col items-center space-y-4">
                                 <div className="flex space-x-5">
                                     <>
-                                        <QRCode value={deposit_address || ""} logoImage="https://solana.com/src/img/branding/solanaLogoMark.svg" removeQrCodeBehindLogo={true} />
+                                        <QRCode value={`solana:${deposit_address}?amount:${amount_to_pay}&spl-token=Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB` || ""} logoImage="https://solana.com/src/img/branding/solanaLogoMark.svg" removeQrCodeBehindLogo={true} />
                                     </>
                                     <div className="h-full w-[280px] border-[2px] rounded-md px-3 py-2 dark:border-[#363b3d]">
                                         <div className="w-full h-full flex flex-col space-y-2">

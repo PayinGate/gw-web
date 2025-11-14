@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getCookie } from '../utils/utils';
 
 class API {
   constructor(baseURL) {
@@ -7,11 +8,31 @@ class API {
     this.post = this.post.bind(this);
   }
 
-  async get(url, params = {}) {
+      async _getHeaders(usesToken, { isGetMethod = true, hasImage = false } = {}) {
+        const headers = {};
+        if (!isGetMethod && !hasImage) {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        if (usesToken) {
+            try {
+              const token = getCookie('token');
+              headers['Authorization'] = `Bearer ${token}`;
+
+            } catch (error) {
+              console.log(error);
+                throw new Error("Failed to obtain authentication token.");
+            }
+        }
+
+        return headers;
+    }
+
+  async get(url, params = {}, {usesToken = true}) {
     try {
       const response = await axios.get(`${this.baseURL}${url}`, {
         params: params,
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3NDIzMjc0NDd9.OUjuHWn6y0SYH5eGegzDKb_2L0nQLjIZv-3n46XKo-M` }
+        headers: await this._getHeaders(usesToken)
       } );
       return response.data;
     } catch (error) {
@@ -22,10 +43,10 @@ class API {
     }
   }
 
-  async post(url, data = {}) {
+  async post(url, data = {}, {usesToken = false}) {
     try {
       const response = await axios.post(`${this.baseURL}${url}`, data, {
-        headers: { Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1NGM5MWYxYy05YWU5LTQ1YWEtOTgyNS1jMTY4MDBmNzg4MWYiLCJpYXQiOjE3NDIzMjc0NDd9.OUjuHWn6y0SYH5eGegzDKb_2L0nQLjIZv-3n46XKo-M` }
+        headers: await this._getHeaders(usesToken)
       });
       return response.data;
     } catch (error) {

@@ -36,7 +36,8 @@ export { TRANSACTION_STATES };
 
 
 export default function PayOutlet(){
-    const { loading, error, get } = useAPI();
+    const { handshake } = usePerformHandshake();
+    const { get } = useAPI();
     const { id } = useParams();
     const [ showLoading, setShowLoading ] = useState(true);
     
@@ -48,19 +49,28 @@ export default function PayOutlet(){
             try {
                 if(isRecurring) setShowLoading(false);
                 const response = await get('/api/p/transaction/fetch', { reference: id });
+                setShowLoading(false);
                 dispatch(store(response.data));
             } catch (error) {
                 console.error('Error: ', error);
             }
         }
+
+        let interval;
+
+        handshake({reference: id})
+        .then(()=>{
+            fetchData();
+            interval = setInterval(() => {
+                fetchData(true);
+            }, 10000); // fetch the data every 10s
+        })
     
-        fetchData();
+        
     
-        const interval = setInterval(() => {
-            fetchData(true);
-        }, 10000); // fetch the data every 10s
-    
-        return () => clearInterval(interval);
+        return () => {
+            if(interval) clearInterval(interval);
+        }
     
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ id ]);
@@ -68,7 +78,7 @@ export default function PayOutlet(){
 
     return (
     <div className="w-full h-full overflow-hidden">
-        { loading && showLoading ? <PageLoading /> : (Object.keys(transactionData).length === 0  ? <>Error</> :  <MainPayUI /> ) }
+        {  showLoading ? <PageLoading /> : (Object.keys(transactionData).length === 0  ? <>Error</> :  <MainPayUI /> ) }
     </div>);
 }
 
@@ -81,10 +91,23 @@ function PageLoading(){
         <div className="loader"></div></div>;
 }
 
+const usePerformHandshake = () => {
+    const { post } = useAPI();
+    const handshake = ({reference}) => new Promise(async (resolve, reject)=> {
+            post('/api/handshake', { reference: reference }, {usesToken: false})
+            .then((response)=>{
+                console.log(response);
+                const token = response.data["token"];
+                document.cookie = `token=${token}; path=/;`; //HttpOnly; Secure; add secure
+                resolve();
+            })
+            .catch((err)=>{
+                console.log(err);
+                reject();
+            })
+    })
 
-
-
-
-
+    return { handshake };
+}
 
 
