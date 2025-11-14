@@ -2,7 +2,7 @@
 import { BiEnvelope, BiErrorCircle, BiLock } from "react-icons/bi";
 import { DarkModeToggle } from "../../../components/dark-toggle";
 import useAPI from "../../../hooks/useApi"
-import { BsEyeSlash } from "react-icons/bs";
+import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { isEmptyString, isValidEmail } from "../../../utils/functions";
 import { CookieData, createCookieDate, GWCookies } from "../../../utils/storage/cookies";
 import { useState } from "react";
@@ -11,9 +11,12 @@ import classNames from "classnames";
 export default function Login(){
     const { post } = useAPI();
     const [ loginError, setLoginError ] = useState("");
+    const [ showPassword, setShowPassword ] = useState(false);
+    const [ signingIn, setSigningIn ] = useState(false);
 
     const handleLogin = async (e)=>{
         e.preventDefault();
+        setSigningIn(true);
         const formData = new FormData(e.target);
         const { email, password } = Object.fromEntries(formData.entries());
         
@@ -44,21 +47,29 @@ export default function Login(){
                 setLoginError("An error occured while trying to log in.");
                 console.error(error);
             }
+            finally {
+                setSigningIn(false);
+            }
         }
         else {
             setLoginError("Invalid email or password")
+            setSigningIn(false);
         }
 
     }
 
 
     return (
-        <div className="min-h-screen w-full h-full">
+        <div className="min-h-screen w-full h-full select-none">
                 <div className="absolute right-0"><DarkModeToggle showToggle={true} /></div>
                 <div className="h-full w-full flex items-center justify-center">
-                    <form className="font-futura flex flex-col gap-4 w-[70%] sm:w-[40%] md:w-[30%] lg:w-[20%]" onSubmit={handleLogin}>
+                    <form className="font-futura flex flex-col gap-4 w-[70%] sm:w-[40%] md:w-[30%] lg:w-[30%]" onSubmit={handleLogin}>
+                        <div className="w-full flex flex-col items-center justify-center gap-[2px] font-inter">
+                            <div className="font-bold text-[25px]">Sign In</div>
+                            <div className="font-medium text-gray-600 dark:text-gray-200 text-[14px]">Welcome back! Please enter your details.</div>
+                        </div>
                         <div className="font-inter">
-                            <div className={classNames("w-full px-3 py-2.5 bg-[#af1414] mb-0 rounded-lg flex text-white gap-3", {
+                            <div className={classNames("w-full px-3 py-2.5 bg-[#af1414] mb-0 rounded-lg flex text-white gap-3 transition-all", {
                                 'hidden': isEmptyString(loginError)
                             })}>
                                 <div className="text-[20px]">
@@ -71,22 +82,27 @@ export default function Login(){
                         </div>
                         <div className="flex flex-col gap-1 text-[14px]">
                             <div className="">Email</div>
-                            <div className="group relative flex items-center border-[1.5px] border-black dark:border-white rounded-[5px] p-[3px] focus-within:border-[#25b09b] transition-all duration-200 ">
+                            <div className="group relative flex items-center border-[1.5px] border-[#818181] dark:border-white rounded-[8px] px-[3px] py-2 focus-within:border-[#25b09b] transition-all duration-200 ">
                                 <span className="p-1"><BiEnvelope className="dark:text-white text-gray-700 group-focus-within:text-[#25b09b] transition-all duration-200" size={15} /></span>
-                                <input type="email" className="relative w-full bg-transparent text-[12.5px] font-Lato px-2 outline-none dark:text-white" placeholder="Enter your email" autoComplete="false" name="email" />
+                                <input type="email" className="relative w-full bg-transparent text-[14px] font-Lato px-2 outline-none dark:text-white" placeholder="Enter your email" autoComplete="false" name="email" />
                             </div>
                         </div>
                         <div className="flex flex-col gap-1 text-[14px]">
                             <div className="">Password</div>
-                            <div className="group relative flex items-center border-[1.5px] border-black dark:border-white rounded-[5px] p-[3px] focus-within:border-[#25b09b] transition-all duration-200">
+                            <div className="group relative flex items-center border-[1.5px] border-[#818181] dark:border-white rounded-[8px] px-[3px] py-2 focus-within:border-[#25b09b] transition-all duration-200">
                                 <span className="p-1"><BiLock className="dark:text-white text-gray-700 group-focus-within:text-[#25b09b] transition-all duration-200" size={15} /></span>
-                                <input type="password" className="relative w-full bg-transparent text-[12.5px] font-Lato px-2 dark:text-white outline-none" placeholder="Enter your email" autoComplete="false"  name="password" />
-                                <span className="p-1 cursor-pointer"><BsEyeSlash className="dark:text-white text-gray-800" size={14}/></span>
+                                <input type={!showPassword ? "password" : "text"} className="relative w-full bg-transparent text-[14px] font-Lato px-2 dark:text-white outline-none" placeholder="Enter your password" autoComplete="false"  name="password" />
+                                <span className="p-1 cursor-pointer" onClick={()=>setShowPassword(!showPassword)}>
+                                    {
+                                    !showPassword ?
+                                    <BsEyeSlash className="dark:text-white text-gray-800" size={14}/>
+                                    : <BsEye className="dark:text-white text-gray-800" size={14}/>}
+                                    </span>
                             </div>
                         </div>
                         <div className="text-[12px] sm:text-[13px] font-futura ml-auto text-[#105147] dark:text-[#25b09b] font-semibold">Forgot password?</div>
                         <div className="w-full text-[14px] font-futura font-semibold">
-                            <button type="submit" className="w-full p-2 text-white bg-[#25b09b] rounded-[5px]" >Sign In</button>
+                            <button type="submit" className={classNames("w-full py-3 text-white rounded-[8px]", { "bg-[#25b09b]": !signingIn, "bg-gray-700": signingIn})} >Sign In</button>
                         </div>
                     </form>
                 </div>

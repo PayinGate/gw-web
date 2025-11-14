@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom"
 export default function SideBar(){
     const SIDEBAR_LINKS = [
         {
-            title: "Home",
+            title: "Dashboard",
             path: "/home",
             icon: <MdOutlineSpaceDashboard />
         },
@@ -31,7 +31,7 @@ export default function SideBar(){
         <div className="flex flex-col ">
             <div className="flex flex-col gap-3">
                 {SIDEBAR_LINKS.map((value, key)=>{
-                    return <NavLink to={value.path} className={({isActive}) => classNames("w-full dark:hover:bg-[black] py-2 px-2 rounded-lg transition-all dark:text-[#c5c5c5] text-[#232323]",
+                    return <NavLink key={key} to={value.path} className={({isActive}) => classNames("w-full dark:hover:bg-[black] py-2 px-2 rounded-lg transition-all dark:text-[#c5c5c5] text-[#232323]",
                         {"dark:bg-[#3a3a3a] bg-[#c3c3c3] ": isActive}
                     )}
                     children={(isActive)=>{

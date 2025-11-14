@@ -8,8 +8,15 @@ import ViewCustomer, { CustomerTransactionsTable } from "../pages/dashboard/cust
 import ViewTransaction from "../pages/dashboard/transactions/view_transaction";
 import { Transactions, TransactionsTable } from "../pages/dashboard/transactions/transactions";
 import { CustomersTransactions } from "../pages/dashboard/customers/transactions";
-import Tokens from "../pages/settings/tokens";
+import APISettings from "../pages/settings/tokens";
 import { GWCookies } from "../utils/storage/cookies";
+import { Settings } from "../pages/settings/settings";
+import PreferencesSettings from "../pages/settings/preferences";
+import AccountSettings from "../pages/settings/account";
+import WebHookSettings from "../pages/settings/webhook";
+import PaymentSettings from "../pages/settings/payment";
+import PayoutSettings from "../pages/settings/payout";
+import NotificationsSettings from "../pages/settings/notifications";
 
 export default function Router(){
     const [ loggedIn, setLoggedIn ] = useState(false);
@@ -65,10 +72,17 @@ export default function Router(){
                         <Route path="pending" element={<TransactionsTable filterWith={"pending"} />} />
                         <Route path="cancelled" element={<TransactionsTable filterWith={"cancelled"} />}/>
                     </Route>
-                    <Route path="*" element={<Home />} />
-                    <Route path="/settings">
-                        <Route path="tokens" element={<Tokens />} />
+                    <Route path="/settings" element={<Settings />}>
+                        <Route path="account" element={<AccountSettings />} />
+                        <Route path="webhook" element={<WebHookSettings />} />
+                        <Route path="api" element={<APISettings />} />
+                        <Route path="payment" element={<PaymentSettings />} />
+                        <Route path="payout" element={<PayoutSettings />} />
+                        <Route path="notifications" element={<NotificationsSettings />} />
+                        <Route path="preferences" element={<PreferencesSettings />} />
+                        <Route path="*" element={<></>} />
                     </Route>
+                    <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
         );

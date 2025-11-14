@@ -39,7 +39,7 @@
   }
   
   input:checked + .toggle {
-    background-color: #6d6d6d;
+    background-color: #27ae60;
   }
   
   input:focus + .toggle {

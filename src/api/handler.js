@@ -35,7 +35,7 @@ class API {
     }
 
     checkRequest(response){
-      if(response['auth'] === false){
+      if(response["error"] === "unauthorized"){
         const cookies = new GWCookies(document);
         cookies.removeAllCookies();
         localStorage.clear();
