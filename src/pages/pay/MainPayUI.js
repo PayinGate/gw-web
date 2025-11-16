@@ -13,6 +13,9 @@ import { TransactionUIWrapper } from "./TransactionUIWrapper";
 import CreateAddressUI from "./CreateAddressUI";
 import { TRANSACTION_STATES } from "./outlet";
 import CheckMark from "../../components/checkmark";
+import { HiExternalLink } from "react-icons/hi";
+import { Link } from "react-router-dom";
+import TransactionCancelledUI from "./TransactionCancelled";
 
 
 const copyToClipboard = (content) => {
@@ -143,7 +146,9 @@ function MainPayUI(props) {
                         <TransactionCompleteUI />
                     </TransactionUIWrapper>
         case "cancelled":
-            return <>cancelled</>
+            return  <TransactionUIWrapper>
+                        <TransactionCancelledUI />
+                    </TransactionUIWrapper>
         default:
             return (
                 <div className="w-full h-full flex flex-col space-y-3">
@@ -152,7 +157,13 @@ function MainPayUI(props) {
                             <span className="text-[13px] text-[#363636] dark:text-white font-Inter font-medium">Time remaining: </span> 
                             <span className="text-[16px] text-[#ff7950]  font-Bebas">{formatTime(remainingTime)}</span>
                         </div>
-                        <div>
+                        <div className="flex items-center gap-4">
+                            {
+                            window.self !== window.top &&
+                                <Link to={""} target="_blank" className="flex items-center font-inter font-medium text-[13px] gap-1">
+                                    <span>Complete on Gateway</span> <HiExternalLink />
+                                </Link> 
+                            }
                             <DarkModeToggle />
                         </div>
                     </div>
@@ -218,7 +229,7 @@ function MainPayUI(props) {
                         </div>
                         <div className="mt-auto w-full flex justify-between items-end">
                             <div className=" font-CircularStd text-[13px]">
-                                <span className="font-Bebas tracking-widest">MERCHANT:</span> <span className="text-gray-900 dark:text-gray-200">{merchant?.name}</span>
+                                <span className="font-Rubik text-[#00c3a5] dark:text-[#25b09b] font-medium">MERCHANT:</span> <span className="text-gray-900 dark:text-gray-200">{merchant?.name}</span>
                             </div>
                             <StatusUI />
                         </div>

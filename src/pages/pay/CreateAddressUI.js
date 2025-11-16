@@ -324,7 +324,7 @@ function CreateAddressUI() {
                 </div>
                 }
                 </div>
-                <button disabled={loadingRates || errorRates || loadingGenAddy || loadingCancel} className="disabled:bg-gray-300 w-full bg-[#ae2b2b] hover:bg-red-600 text-white font-semibold py-2 px-4 rounded font-inter" onClick={cancelTransaction}>
+                <button disabled={loadingRates  || loadingGenAddy || loadingCancel} className="disabled:bg-gray-300 w-full bg-[#ae2b2b] hover:bg-red-600 text-white font-semibold py-2 px-4 rounded font-inter" onClick={cancelTransaction}>
                         Cancel Transaction
                 </button>
         </div>
