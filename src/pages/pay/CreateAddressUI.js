@@ -12,8 +12,10 @@ function CreateAddressUI() {
     const { get } = useAPI();
     const { loading: loadingRates, error: errorRates, get : getRatesApi } = useAPI();
     // eslint-disable-next-line no-unused-vars
-    const { post: postGenAddy, loading: loadingGenAddy, error: errorGenAddy } = useAPI();
+    const { post: postGenAddy, error: errorGenAddy } = useAPI();
+    const { post: postCancel } = useAPI();
     const dispatch = useDispatch();
+
 
     const { id, reference } = transactionData;
 
@@ -28,6 +30,10 @@ function CreateAddressUI() {
 
 
     const [ refreshCount, setRefreshCount ] = useState(10);
+
+
+    const [ loadingGenAddy, setLoadingGenAddy ] = useState(false);
+    const [ loadingCancel, setLoadingCancel ] = useState(false);
 
 
     const createChainOptions = (list)=>{
@@ -120,7 +126,7 @@ function CreateAddressUI() {
         }
     }
 
-    const generateAddress = async () => {
+    const generateAddress = () => {
         if(id && reference && selectedChain && selectedCoin && rates) {
             const postParams = {
                 transaction_id: id, 
@@ -129,36 +135,106 @@ function CreateAddressUI() {
                 coin: selectedCoin,
                 rates: rates
             }
-            try {
-                const response = await postGenAddy('/api/p/transaction/generate-address', postParams);
-                if(response["success"] === true){
-                    dispatch(store(response));
+            const payPromise = new Promise(async (resolve, reject) => {
+                setLoadingGenAddy(true);
+                try {
+                    const response = await postGenAddy('/api/p/transaction/generate-address', postParams);
+                    if(response["success"] === true){
+                        dispatch(store(response.data));
+                        resolve();
+                    }
+                    else {
+                        toast(response["message"], {
+                            position: "bottom-right",
+                            autoClose: 2000,
+                            hideProgressBar: true,
+                            closeOnClick: true,
+                            pauseOnHover: false,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "dark",
+                            closeButton: true,
+                            type: "error",
+                            });
+                    }
                 }
+                catch(error) {
+                    console.error('Error: ', error);
+                    let message;
+                    if(errorGenAddy.message){
+                        message = errorGenAddy.message;
+                    }
+                    else {
+                        message = "Error fetching rate. Check internet connection";
+                    }
+                    toast(message, {
+                        position: "bottom-right",
+                        autoClose: 2000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: false,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "dark",
+                        closeButton: true,
+                        type: "error",
+                        });
+                    reject();
+                }
+                finally {
+                    setLoadingGenAddy(false);
+                }
+            });
+
+
+            toast.promise(payPromise, {
+                pending: "Generating address, please wait"
+            },
+            {
+                position: "bottom-right"
             }
-            catch(error) {
-                console.error('Error: ', error);
-                let message;
-                if(errorGenAddy.message){
-                    message = errorGenAddy.message;
-                }
-                else {
-                    message = "Error fetching rate. Check internet connection";
-                }
-                console.log(message);
-                toast(message, {
-                    position: "bottom-right",
-                    autoClose: 2000,
-                    hideProgressBar: true,
-                    closeOnClick: true,
-                    pauseOnHover: false,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    closeButton: true,
-                    type: "error",
-                    });
-            }
+
+            );
         }
+    }
+
+
+    const cancelTransaction = () => {
+        if(!id) return;
+
+        const postParams = {
+            transaction_id: id, 
+        }
+        const cancelPromise = new Promise(async (resolve, reject) => {
+            setLoadingCancel(true);
+            try {
+                const response = await postCancel('/api/p/transaction/cancel', postParams);
+                if(response["success"] === true){
+                    const cancelledTrData = {...transactionData, status: "cancelled"};
+                    dispatch(store(cancelledTrData));
+                    resolve();
+                } else {
+                    reject();
+                }
+            }
+            catch {
+                reject();
+            }
+            finally {
+                setLoadingCancel(false);
+            }
+        });
+
+        toast.promise(cancelPromise, {
+            pending: "Cancelling transaction, please wait",
+            error: "Failed to cancel transaction",
+            success: "Transaction successfully cancelled"
+        },
+        {
+            position: "bottom-right"
+        }
+
+        );
     }
     
 
@@ -242,15 +318,15 @@ function CreateAddressUI() {
                 {
                     rates &&
                     <div className="flex items-center w-full gap-4">
-                    <button disabled={loadingRates || errorRates} className="disabled:bg-gray-300 w-full bg-[#25b09b] hover:bg-[#0c907c] text-white font-bold py-2 px-4 rounded font-inter" onClick={generateAddress}>
+                    <button disabled={loadingRates || errorRates || loadingGenAddy || loadingCancel} className="disabled:bg-gray-300 w-full bg-[#25b09b] hover:bg-[#0c907c] text-white font-bold py-2 px-4 rounded font-inter" onClick={generateAddress}>
                         Pay
-                    </button>
-                    <button disabled={loadingRates || errorRates} className="disabled:bg-gray-300 w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded font-inter">
-                        Cancel
                     </button>
                 </div>
                 }
                 </div>
+                <button disabled={loadingRates  || loadingGenAddy || loadingCancel} className="disabled:bg-gray-300 w-full bg-[#ae2b2b] hover:bg-red-600 text-white font-semibold py-2 px-4 rounded font-inter" onClick={cancelTransaction}>
+                        Cancel Transaction
+                </button>
         </div>
     </div>
 }

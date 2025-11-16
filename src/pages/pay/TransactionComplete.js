@@ -53,6 +53,21 @@ function TransactionCompleteUI(props) {
         return () => clearInterval(interval);
     }, [callbackCountdown])
 
+    // send iframe message
+
+    useEffect(()=>{
+        if(window.self !== window.top) {
+            setTimeout(()=>{
+                window.parent.postMessage(
+                    {
+                        type: 'transaction.completed',
+                        data: transactionData
+                    }, "*"
+                )
+            }, 2000);
+        }
+    }, [transactionData]);
+
 
     return <div className="p-4 w-full h-full flex flex-col items-center space-y-6">
                 <div className="">

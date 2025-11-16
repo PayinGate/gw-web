@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import store from './context/store';
@@ -11,7 +10,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      {window.self !== window.top ?
+      <div className='fixed w-full h-full top-0 left-0 bg-[#000000b6] backdrop-blur-sm flex justify-center items-center z-[1000]'>
+        <div className='w-[80%] h-[90%] rounded-lg overflow-x-hidden flex'>
+          <App />
+        </div>
+      </div> : 
+      <App /> }
     </BrowserRouter>
   </Provider>
 );

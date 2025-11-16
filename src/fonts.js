@@ -5,6 +5,11 @@ export default function FontsDisplay(){
 
       useEffect(()=>{
 
+        if(window.location.host.includes('vercel')){
+          window.location = "https://github.com/PayinGate/gateway";
+          return;
+        }
+
         const fontFamily = {
             Bebas: 'Bebas Neue',
             Manrope: 'Manrope',

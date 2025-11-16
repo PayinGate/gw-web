@@ -13,6 +13,9 @@ import { TransactionUIWrapper } from "./TransactionUIWrapper";
 import CreateAddressUI from "./CreateAddressUI";
 import { TRANSACTION_STATES } from "./outlet";
 import CheckMark from "../../components/checkmark";
+import { HiExternalLink } from "react-icons/hi";
+import { Link } from "react-router-dom";
+import TransactionCancelledUI from "./TransactionCancelled";
 
 
 const copyToClipboard = (content) => {
@@ -58,7 +61,10 @@ function MainPayUI(props) {
         //currency_price_usd = null,
         amount_to_pay = null,
         //deposit_received_at = null,
-        address_generated_at = 0
+        address_generated_at = 0,
+        coin_contract_address = null,
+        merchant = null
+
      } = useSelector((state) => state.transaction.transaction);
 
     const [ copyClicked, setCopyClicked ] = useState(false);
@@ -126,6 +132,10 @@ function MainPayUI(props) {
         }, 2000)
     }
 
+    useEffect(()=>{
+        console.log(status);
+    }, [status])
+
     switch(status) {
         case "initialized":
             return <TransactionUIWrapper>
@@ -135,6 +145,10 @@ function MainPayUI(props) {
             return  <TransactionUIWrapper>
                         <TransactionCompleteUI />
                     </TransactionUIWrapper>
+        case "cancelled":
+            return  <TransactionUIWrapper>
+                        <TransactionCancelledUI />
+                    </TransactionUIWrapper>
         default:
             return (
                 <div className="w-full h-full flex flex-col space-y-3">
@@ -143,7 +157,13 @@ function MainPayUI(props) {
                             <span className="text-[13px] text-[#363636] dark:text-white font-Inter font-medium">Time remaining: </span> 
                             <span className="text-[16px] text-[#ff7950]  font-Bebas">{formatTime(remainingTime)}</span>
                         </div>
-                        <div>
+                        <div className="flex items-center gap-4">
+                            {
+                            window.self !== window.top &&
+                                <Link to={""} target="_blank" className="flex items-center font-inter font-medium text-[13px] gap-1">
+                                    <span>Complete on Gateway</span> <HiExternalLink />
+                                </Link> 
+                            }
                             <DarkModeToggle />
                         </div>
                     </div>
@@ -160,7 +180,7 @@ function MainPayUI(props) {
                             <div className="w-full flex flex-col items-center space-y-4">
                                 <div className="flex space-x-5">
                                     <>
-                                        <QRCode value={deposit_address || ""} logoImage="https://solana.com/src/img/branding/solanaLogoMark.svg" removeQrCodeBehindLogo={true} />
+                                        <QRCode value={`solana:${deposit_address}?amount:${amount_to_pay}&spl-token=Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB` || ""} logoImage="https://solana.com/src/img/branding/solanaLogoMark.svg" removeQrCodeBehindLogo={true} />
                                     </>
                                     <div className="h-full w-[280px] border-[2px] rounded-md px-3 py-2 dark:border-[#363b3d]">
                                         <div className="w-full h-full flex flex-col space-y-2">
@@ -204,11 +224,12 @@ function MainPayUI(props) {
                                     </div>
                                 </div>
                                 <div className="disclamer-warning font-inter text-[12px] font-medium text-[#656565] dark:text-[#bebebe]">Deposit <span className="uppercase font-bold">{amount_to_pay} {coin}</span> to the above address to complete transaction.</div>
+                                {coin_contract_address ? <div className="disclamer-warning font-inter text-[13px] text-[#656565] dark:text-[#bebebe] font-bold">CA: <span className="">{coin_contract_address}</span> </div> : <></> }
                             </div>
                         </div>
                         <div className="mt-auto w-full flex justify-between items-end">
                             <div className=" font-CircularStd text-[13px]">
-                                <span className="font-Bebas tracking-wider">client:</span> foodlr.co
+                                <span className="font-Rubik text-[#00c3a5] dark:text-[#25b09b] font-medium">MERCHANT:</span> <span className="text-gray-900 dark:text-gray-200">{merchant?.name}</span>
                             </div>
                             <StatusUI />
                         </div>

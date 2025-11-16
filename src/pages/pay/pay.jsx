@@ -30,8 +30,9 @@ export default function Pay(props) {
 
 
 
+
     return (
-        <div className="h-full w-full items-center flex flex-col py-16 px-48">
+        <div className="h-full w-full items-center flex flex-col py-16 md:px-20 xl:px-48">
             <Outlet />
         </div>
     );
