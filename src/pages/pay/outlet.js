@@ -65,6 +65,9 @@ export default function PayOutlet(){
                 fetchData(true);
             }, 10000); // fetch the data every 10s
         })
+        .catch(()=>{
+          setShowLoading(false);  
+        });
     
         
     
