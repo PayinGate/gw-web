@@ -3,7 +3,7 @@ import { getCookie } from '../utils/utils';
 
 class API {
   constructor(baseURL) {
-    this.baseURL = 'http://localhost:3000';
+    this.baseURL = 'https://2fe99342f6c6.ngrok-free.app';
     this.get = this.get.bind(this);
     this.post = this.post.bind(this);
   }
