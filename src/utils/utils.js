@@ -13,3 +13,17 @@ export function getCookie(cname) {
   }
   return "";
 }
+
+export function noToLocale(number){
+    const options = { 
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2 
+    };
+    return  Number(number).toLocaleString('en', options);
+}
+
+export function trimDecimalZeros(str) {
+  if (!str.includes('.')) return str; 
+  str = str.replace(/\.?0+$/, '');
+  return str;
+}

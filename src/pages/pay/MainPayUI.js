@@ -16,6 +16,7 @@ import CheckMark from "../../components/checkmark";
 import { HiExternalLink } from "react-icons/hi";
 import { Link } from "react-router-dom";
 import TransactionCancelledUI from "./TransactionCancelled";
+import { noToLocale, trimDecimalZeros } from "../../utils/utils";
 
 
 const copyToClipboard = (content) => {
@@ -174,7 +175,7 @@ function MainPayUI(props) {
                                 <div className="flex items-center w-fit text-[13px] font-inter hover:border-b-[1px] py-[0.4px] cursor-pointer">
                                     <div className="currency_from uppercase">{amount} {currency}</div>
                                     <div className="switch-rate"></div>
-                                    <div className="currency_to uppercase">{amount_to_pay} {coin}</div>
+                                    <div className="currency_to uppercase">{trimDecimalZeros(`${amount_to_pay}`)} {coin}</div>
                                 </div>
                             </div>
                             <div className="w-full flex flex-col items-center space-y-4">
@@ -187,10 +188,10 @@ function MainPayUI(props) {
                                             <div className="flex flex-col space-y-[-5px]">
                                                 <div className="font-futura text-[12px] font-bold text-[#656565] dark:text-[#bebebe]">Amount</div>
                                                 <div className="flex items-center space-x-3">
-                                                    <div className="text-[24px] font-CircularStd font-bold uppercase">{amount_to_pay} {coin}</div>
+                                                    <div className="text-[24px] font-CircularStd font-bold uppercase">{trimDecimalZeros(`${amount_to_pay}`)} {coin}</div>
                                                     <div className="">
                                                         <button className="hover:scale-[0.9] active:scale-[1.1] transition-all ease-in-out duration-300 z-[2]"
-                                                                onClick={()=>copyToClipboard(amount_to_pay)}
+                                                                onClick={()=>copyToClipboard( trimDecimalZeros(`${amount_to_pay}`) )}
                                                                 title="Copy amount"
                                                                 >
                                                             <IoCopyOutline  />

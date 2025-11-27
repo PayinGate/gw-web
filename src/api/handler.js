@@ -16,6 +16,7 @@ class API {
 
         if (usesToken) {
             try {
+              console.log(document.cookie)
               const token = getCookie('token');
               headers['Authorization'] = `Bearer ${token}`;
 
@@ -24,6 +25,8 @@ class API {
                 throw new Error("Failed to obtain authentication token.");
             }
         }
+
+        headers["ngrok-skip-browser-warning"] = true;
 
         return headers;
     }

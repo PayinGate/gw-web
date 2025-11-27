@@ -4,7 +4,8 @@ import { IoChevronDown } from "react-icons/io5";
 import classNames from "classnames";
 
 export function CustomSelect({
-    border, borderColor, background, pOptions, callbackTrigger
+    border, borderColor, background, pOptions, callbackTrigger,
+    uppercase = false
 }){
 
     const [ showCustomSelectOptions, toggleSelectOptions ] = useState(false);
@@ -68,7 +69,12 @@ export function CustomSelect({
                     }
 
                     <div 
-                        className="text-[#212121] text-[13px] font-inter dark:text-[#25b09b] font-medium capitalize">
+                        className={classNames("text-[#212121] text-[13px] font-inter dark:text-[#25b09b] font-medium",
+                            {
+                                "capitalize": !uppercase,
+                                "uppercase": uppercase
+                            }
+                        )}>
                             {options[selectedIndex] ? options[selectedIndex].name : ""}
                     </div>
                 <div 
@@ -87,7 +93,12 @@ export function CustomSelect({
                         v.image && <div className="h-[26px] w-[26px] rounded-full border-[0.5px] border-[#bebebe]" style={{ backgroundImage: ``, backgroundRepeat: "no-repeat", backgroundSize: "contain" }} ></div>
                         : <></> }
                     </div>
-                    <div className="capitalize">{v.name}</div>
+                    <div className={classNames(
+                            {
+                                "capitalize": !uppercase,
+                                "uppercase": uppercase
+                            }
+                    )}>{v.name}</div>
                 </li>
             })}
             </ul>

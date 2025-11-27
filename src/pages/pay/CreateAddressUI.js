@@ -266,16 +266,16 @@ function CreateAddressUI() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     
-    return <div className="w-full h-full flex flex-col items-center p-5 space-y-12">
+    return <div className="w-full h-full flex flex-col items-center md:p-5 space-y-12">
         <div className="">
             <div className="font-CircularStd font-medium text-[24px] text-[#585858] dark:text-[#b7b7b7]">Create Deposit Address</div>
         </div>
-        <div className="w-[380px] flex flex-col space-y-4">
+        <div className="w-full md:w-[380px] flex flex-col space-y-4">
             <div>
                 <CustomSelect background="#F5F5F5" border="0px" pOptions={chainOptions} callbackTrigger={onSelectChain} />
             </div>
             <div>
-                <CustomSelect background="#F5F5F5" border="0px" pOptions={coinOptions} callbackTrigger={onSelectCoin} />
+                <CustomSelect background="#F5F5F5" border="0px" pOptions={coinOptions} callbackTrigger={onSelectCoin} uppercase={true} />
             </div>
 
 
