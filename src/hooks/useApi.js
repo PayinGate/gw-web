@@ -34,6 +34,10 @@ const useAPI = () => {
         return handleRequest(api.post, url, data, usesToken, {usingFormData: usesFormData, hasImage: hasImage});
     };
 
+    const patch = async (url, data) => {
+        return handleRequest(api.patch, url, data);
+    };
+
     const put = async (url, data) => {
         return handleRequest(api.put, url, data);
     };
@@ -48,6 +52,7 @@ const useAPI = () => {
         get,
         post,
         put,
+        patch,
         del,
     };
 };

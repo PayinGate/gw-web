@@ -112,7 +112,49 @@ class API {
 
         }
     }
-  
+
+    async patch(endpoint, data) {
+      const requestBody = JSON.stringify(data);
+      try {
+         const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            method: 'PATCH',
+            headers: await this._getHeaders(true, { isGetMethod : false, hasImage: false }),
+            body: requestBody
+          });
+
+          const responseJSON = await response.json();
+          this.checkRequest(responseJSON);
+          return await responseJSON;
+      }
+      catch(error) {
+        if(error.response) {
+          return { error: error.response };
+        }
+        this.#_throwError(`Error during PATCH request: ${error.message}`);        
+      }
+    }
+
+    async delete(endpoint, data) {
+      const requestBody = JSON.stringify(data);
+      try {
+         const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            method: 'DELETE',
+            headers: await this._getHeaders(true, { isGetMethod : false, hasImage: false }),
+            body: requestBody
+          });
+
+          const responseJSON = await response.json();
+          this.checkRequest(responseJSON);
+          return await responseJSON;
+      }
+      catch(error) {
+        if(error.response) {
+          return { error: error.response };
+        }
+        this.#_throwError(`Error during PATCH request: ${error.message}`);        
+      }
+    }
+    
     async options(endpoint) {
       try {
         const response = await fetch(`${this.baseUrl}${endpoint}`, {

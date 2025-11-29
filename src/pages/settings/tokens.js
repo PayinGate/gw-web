@@ -50,42 +50,30 @@ export default function APISettings(){
     const [ currentPath, setPath ] = useState("private");
     const [tokens, setTokens] = useState({});
 
+    const fetchTokens = () => {
+        fetch()
+        .then((tokens)=>{
+            setTokens(tokens);
+        })
+        .catch((error)=>{
+            
+        });
+    }
+
     useEffect(()=>{
         fetchTokens();        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const fetchTokens = () => {
-        fetch()
-            .then((tokens)=>{
-                setTokens(tokens);
-            })
-            .catch((error)=>{
-                
-            })
-    }
+    const doAndRefresh = (fn) => {
+        fn().then(fetchTokens)
+            .catch((error)=>console.log(error));
+    };
 
-    const generatePublicToken = ()=>{
-        generatePublic().then((token)=>{
-            fetchTokens();
-        })
-    }
-    
-    const generatePrivateToken = ()=>{
-        generatePrivate().then((token)=>{
-            fetchTokens();
-        })
-    }
-    const revokePublicToken = ()=>{
-        revokePublic().then((token)=>{
-            fetchTokens();
-        })
-    }
-    const revokePrivateToken = ()=>{
-        revokePrivate().then((token)=>{
-            fetchTokens();
-        })
-    }
+    const generatePublicToken = () => doAndRefresh(generatePublic);
+    const generatePrivateToken = () => doAndRefresh(generatePrivate);
+    const revokePublicToken = () => doAndRefresh(revokePublic);
+    const revokePrivateToken = () => doAndRefresh(revokePrivate);
 
 
     return <div className="flex flex-col gap-5">

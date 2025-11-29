@@ -8,7 +8,7 @@ import { NavLink } from "react-router-dom"
 export default function SideBar(){
     const SIDEBAR_LINKS = [
         {
-            title: "Dashboard",
+            title: "Overview",
             path: "/home",
             icon: <MdOutlineSpaceDashboard />
         },

@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-vars */
+import { useCallback, useEffect, useState } from "react";
+import useAPI from "../../hooks/useApi";
+
 const CREATE_WEBHOOK_FIELDS = [
     {
         title: "URL",
@@ -12,6 +16,32 @@ const CREATE_WEBHOOK_FIELDS = [
 ]
 
 export default function WebHookSettings() {
+
+    const { fetchWebhooks, createWebhook, updateWebhook, deleteWebhook } = useWebhooks();
+    const [ webhooks, setWebhooks ] = useState([]);
+
+    const fetch = useCallback(()=>{
+        fetchWebhooks()
+        .then((webhooks)=> setWebhooks(webhooks))
+        .catch((error)=> console.log(error) /** handle error */ )
+    }, [fetchWebhooks]);
+
+    useEffect(()=>{
+        fetch();
+    }, []);
+
+    const doAndRefresh = (fn, ...args) => {
+        fn(...args)
+        .then(fetch)
+        .catch((error)=>console.log(error));
+    };
+
+    const fnCreateWebhook = (url, events) => doAndRefresh(createWebhook, url, events);
+    const fnUpdateWebhook = (id, url, events, status) => doAndRefresh(updateWebhook, id, url, events, status);
+    const fnDeleteWebhook = (id) => doAndRefresh(deleteWebhook, id);
+
+
+
     return <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
             <div className="flex flex-col">
@@ -43,7 +73,9 @@ export default function WebHookSettings() {
                             }) 
                             }
                         </div>
-                        <div className="w-full"></div>
+                        <div className="w-full">
+                            {JSON.stringify(webhooks)}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,4 +121,81 @@ export default function WebHookSettings() {
             </div>
         </div> */}
     </div>;
+}
+
+
+const useWebhooks = () => {
+    const { post, get, patch, del } = useAPI();
+    const fetchWebhooks = useCallback(async ()=>{
+        try {
+            const response = await get('/settings/webhook/fetch', []);
+            if(response['success'] === true) {
+                return response["data"];
+            }
+            else {
+                throw new Error("An error occured while fetching webhooks");
+            }
+        }
+        catch (error) {
+            throw new Error("An error occured while fetching webhooks");
+        }
+    }, [get]) 
+
+    const createWebhook = useCallback(async (url, events)=> {
+        try {
+            const data = {
+                url,
+                events
+            }
+            const response = await post('/settings/webhook/create', data);
+            if(response['success'] === true) {
+                return response.data;
+            }
+            else {
+                throw new Error("An error occured while creating webhook");
+            }
+        }
+        catch (error) {
+            throw new Error("An error occured while creating webhook");
+        }
+    }, [post])
+
+    const updateWebhook = useCallback(async (id, url = null, events = null, status = null)=> {
+        if(!url && !events && !status) throw new Error("Invalid update request");
+        try {
+            const data = {
+                url: url,
+                events: events,
+                status: status
+            }
+            const response = await patch(`/settings/webhook/update/${id}`, data);
+            if(response['success'] === true) {
+                return response.data;
+            }
+            else {
+                throw new Error("An error occured while creating webhook");
+            }
+        }
+        catch (error) {
+            throw new Error("An error occured while creating webhook");
+        }
+    }, [patch]);
+
+
+    const deleteWebhook = useCallback(async (id)=>{
+        try {
+            const response = await del(`/settings/webhook/delete/${id}`, []);
+            if(response['success'] === true) {
+                return response.data;
+            }
+            else {
+                throw new Error("An error occured while creating webhook");
+            }
+        }
+        catch (error) {
+            throw new Error("An error occured while creating webhook");
+        }  
+    }, [del]);
+    
+    return { fetchWebhooks, createWebhook, updateWebhook, deleteWebhook };
 }
