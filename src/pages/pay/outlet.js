@@ -99,9 +99,13 @@ const usePerformHandshake = () => {
     const handshake = ({reference}) => new Promise(async (resolve, reject)=> {
             post('/api/handshake', { reference: reference }, {usesToken: false})
             .then((response)=>{
-                console.log(response);
                 const token = response.data["token"];
-                document.cookie = `token=${token}; path=/;`; //HttpOnly; Secure; add secure
+                if(window.location.hostname === "localhost"){
+                    document.cookie = `token=${token}; path=/;`;
+                }
+                else {
+                    document.cookie = `token=${token}; path=/; SameSite=None; Secure`; //HttpOnly; Secure; add secure
+                }
                 resolve();
             })
             .catch((err)=>{

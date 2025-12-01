@@ -15,7 +15,7 @@ export function TransactionUIWrapper(props) {
                 <DarkModeToggle />
             </div>
         </div>
-        <div className=" w-full h-full bg-white rounded-xl transition ease-in delay-50 dark:bg-[#181a1b] relative flex flex-col px-2 py-4 overflow-hidden">
+        <div className="w-full h-full md:bg-white rounded-xl transition ease-in delay-50 dark:bg-[#181a1b] relative flex flex-col px-2 py-4 overflow-hidden">
             {props.children}
         </div>
     </div>;

@@ -26,6 +26,7 @@
 .dark .App {
   color: white;
 }
+
 .dark .darkmode {
   width: 100% !important;
   height: 100% !important;
@@ -38,4 +39,9 @@
 }
 .dark .lightmode {
   visibility: hidden;
+}
+@media screen and (max-width: 767px) {
+  .lightmode {
+    background-color: white;
+  }
 }
