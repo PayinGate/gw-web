@@ -73,7 +73,7 @@ export default function Router(){
                         <Route path="cancelled" element={<TransactionsTable filterWith={"cancelled"} />}/>
                     </Route>
                     <Route path="/settings" element={<Settings />}>
-                        <Route path="account" element={<AccountSettings />} />
+                        <Route path="" element={<AccountSettings />} />
                         <Route path="webhook" element={<WebHookSettings />} />
                         <Route path="api" element={<APISettings />} />
                         <Route path="payment" element={<PaymentSettings />} />

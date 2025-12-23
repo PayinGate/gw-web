@@ -2,6 +2,12 @@
 import { useEffect, useState } from "react";
 import useAPI from "../../hooks/useApi";
 import classNames from "classnames";
+import { Table } from "../../components/table";
+import { PlusCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../../components/dialog";
+import { Button } from "../../components/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/select";
+import { isEmpty } from "../../utils/functions";
 
 
 
@@ -19,10 +25,15 @@ const TOkEN_LINKS = [
 
 const TABLE_FIELDS = [
     {
-        heading: "Token",
+        heading: "Name",
+        key: "name"
+    },
+    {
+        heading: "Key",
         key: "token",
         reduce: true,
-        text_format: "lowercase"
+        text_format: "lowercase",
+        copy: true
     },
     {
         heading: "Status",
@@ -45,10 +56,17 @@ const TABLE_FIELDS = [
 ];
 
 export default function APISettings(){
-
     const { fetch, generatePrivate, generatePublic, revokePrivate, revokePublic } = useTokens();
     const [ currentPath, setPath ] = useState("private");
-    const [tokens, setTokens] = useState({});
+    const [tokens, setTokens] = useState(null);
+    const [ tokenType, setType ] = useState("");
+    const [ tokenName, setTokenName ] = useState("");
+    
+    const[ selectError, setSelectError ] = useState(false);
+    const [ nameError, setNameError ] = useState(false);
+    const [ disableGenButton, setDisableButton] = useState(false);
+
+    const [ open, setOpen ] = useState(false);
 
     const fetchTokens = () => {
         fetch()
@@ -65,29 +83,106 @@ export default function APISettings(){
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    const doAndRefresh = (fn) => {
-        fn().then(fetchTokens)
-            .catch((error)=>console.log(error));
+    const doAndRefresh = (fn, ...args) => {
+        fn(...args).then(fetchTokens)
+            .catch((error)=>{
+                console.log(error);
+            })
+            .finally(()=>{
+                setTokenName("");
+                setType("");
+                setDisableButton(false);
+                setOpen(false);
+            });            
     };
 
-    const generatePublicToken = () => doAndRefresh(generatePublic);
-    const generatePrivateToken = () => doAndRefresh(generatePrivate);
+    const generatePublicToken = (tokenName) => doAndRefresh(generatePublic, tokenName);
+    const generatePrivateToken = (tokenName) => doAndRefresh(generatePrivate, tokenName);
     const revokePublicToken = () => doAndRefresh(revokePublic);
     const revokePrivateToken = () => doAndRefresh(revokePrivate);
 
+    const generateToken = ()=>{
+        setNameError(false);
+        setSelectError(false);
+        if(isEmpty(tokenName) || (tokenType != "private" && tokenType != "public")) {
+            if(isEmpty(tokenName)) setNameError(true);
+            if(isEmpty(tokenType)) setSelectError(true);
 
-    return <div className="flex flex-col gap-5">
+            return;
+        }  
+        setDisableButton(true);
+
+        if(tokenType == "private") {
+            generatePrivateToken(tokenName);
+        }
+        else {
+            generatePublicToken(tokenName);
+        }
+    };
+
+
+    return <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col gap-4 p-6">
+        <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
-                    <div className="font-Archivo text-[22px] font-bold">Tokens</div>
+                    <div className="font-Archivo text-[22px] font-bold">API Keys</div>
                     <div className="font-semibold font-dmsans text-[10px]  bg-[#27AE601A] text-[#27ae60] rounded-md py-[2px] px-[8px]">Test</div>
                 </div>
                 <div className="font-medium text-[13px] text-[#474747] dark:text-[#cecece] font-inter">
                     API tokens allow your application to securely access the Payment API. Keep them secret.
                 </div>
             </div>
-
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Create New Key
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Create New API Key</DialogTitle>
+                  <DialogDescription>
+                    Give your new key a name. This will help you identify it
+                    later.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor="key-name" className="text-right text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Key Name
+                    </label>
+                    <input
+                      id="key"
+                      placeholder="Key name"
+                      className={classNames("flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 md:text-sm col-span-3",
+                        {"border-red-800": nameError}
+                      )}
+                      onChange={e=>setTokenName(e.target.value)}
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4 w-full">
+                    <label htmlFor="type" className="text-right text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Type</label>
+                    <div className="col-span-3">
+                    <Select onValueChange={val=>setType(val)}>
+                      <SelectTrigger error={selectError}>
+                        <SelectValue  className="" placeholder="Select type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="private">Private</SelectItem>
+                        <SelectItem value="public">Public</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <button onClick={generateToken} type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" >Generate Key</button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+            {/* <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-[#25b19c] text-[#f7fdfc] hover:bg-[#25b19c]/90 h-10 px-4 py-2"><PlusCircle size={14} /><span>Create New Key</span></button> */}
         </div>
         <div className="h-[0.8px] w-full bg-[#dadada] font-inter"></div>
         <div className="flex gap-5 justify-between">
@@ -100,8 +195,7 @@ export default function APISettings(){
                     </button>
                 </div>
                 <div className="flex items-center gap-4 py-1">
-                    <button className="text-[12px] bg-[#025e02] rounded-md px-3 py-2 text-white font-semibold font-dmsans" onClick={generatePrivateToken}>Generate new private key</button>
-                    <button className="text-[12px] bg-[#b50101] rounded-md px-3 py-2 text-white font-semibold font-dmsans" onClick={revokePrivateToken}>Revoke</button>
+                    <button className="text-[12px] bg-[#25b19c] rounded-md px-3 py-2 text-[#f7fdfc] font-semibold font-dmsans peer-disabled:cursor-not-allowed peer-disabled:opacity-70" disabled={disableGenButton} onClick={generatePrivateToken}>Generate new private key</button>
                 </div>
             </div>
 
@@ -114,14 +208,13 @@ export default function APISettings(){
                     </button>
                 </div>
                 <div className="flex items-center gap-4 py-1">
-                    <button className="text-[12px] bg-[#025e02] rounded-md px-3 py-2 text-white font-semibold font-dmsans" onClick={generatePublicToken}>Generate new public key</button>
-                    <button className="text-[12px] bg-[#b50101] rounded-md px-3 py-2 text-white font-semibold font-dmsans" onClick={revokePublicToken}>Revoke</button>
+                    <button className="text-[12px] bg-[#25b19c] text-[#f7fdfc] rounded-md px-3 py-2 font-semibold font-dmsans" onClick={generatePublicToken}>Generate new public key</button>
                 </div>
             </div>
         </div>
         
         <div className="flex flex-col gap-3">
-            <div className="font-bold text-[16px]">Token List Table</div>
+            {/* <div className="font-bold text-[16px]">Token List Table</div> */}
             <div className="">
                 <div className="flex items-center gap-4 whitespace-nowrap overflow-x-auto">
                     {TOkEN_LINKS.map((link, key)=> {
@@ -132,7 +225,8 @@ export default function APISettings(){
                         </div>
                     })}
                 </div>
-                <table className="w-full table-auto border-collapse">
+                {tokens && (currentPath == "private" ? <Table fields={TABLE_FIELDS} data={tokens.private } /> : <Table fields={TABLE_FIELDS} data={tokens.public} /> )}
+                {/* <table className="w-full table-auto border-collapse">
                 <thead className="border-t-[2px] w-full border-t-[#66676a2e] font-dmsans font-medium text-[12px] uppercase text-[#76777a] dark:text-[#e6e6e6]">
                     <tr className="">
                         {TABLE_FIELDS.map((field, key)=> <th className="py-2 text-start" key={key}>{field.heading}</th>)}
@@ -144,7 +238,7 @@ export default function APISettings(){
                                         {
                                             (TABLE_FIELDS).map((field, key) => {
                                                 let fieldValue = tokenDetails[field.key] ?? "N/A" ;
-                                                if(field.reduce) fieldValue = reduceToken(fieldValue)
+                                                if(field.reduce) fieldValue = reduceString(fieldValue)
                                                 if(field.is_date) fieldValue = new Date(fieldValue).toDateString();
                                                 if(field.key === "status") fieldValue = <div className={classNames('tr_status', { 'completed': fieldValue == 'active', 'cancelled': fieldValue == 'revoked' })}>{fieldValue}</div>
 
@@ -156,7 +250,7 @@ export default function APISettings(){
                             </tr>
                         })}
                     </tbody>
-                </table>
+                </table> */}
             </div>
         </div>
 
@@ -181,6 +275,7 @@ export default function APISettings(){
                 // revoked
             </div>
         </div> */}
+        </div>
     </div>;
 }
 
@@ -202,9 +297,9 @@ const useTokens = () => {
         }
     }
 
-    const generatePublic = async () => {
+    const generatePublic = async (tokenName) => {
         try {
-            const response = await genPub('/settings/tokens/generate-token/public', []);
+            const response = await genPub('/settings/tokens/generate-token/public', {name: tokenName}, true, false);
             if(response['success'] === true) {
                 return response.data.token;
             }
@@ -217,9 +312,10 @@ const useTokens = () => {
         }
     }
 
-    const generatePrivate = async() => {
+    const generatePrivate = async(tokenName) => {
+        console.log(tokenName);
         try {
-            const response = await genPriv('/settings/tokens/generate-token/private', []);
+            const response = await genPriv('/settings/tokens/generate-token/private', {name: tokenName}, true, false);
             if(response['success'] === true) {
                 return response.data.token;
             }
@@ -244,6 +340,8 @@ const useTokens = () => {
 }
 
 
-const reduceToken = (text) => {
+export const reduceString = (text) => {
     return text?.substring(0, 7) + "..." + text?.substring(text.length - 15) || null;
 }
+
+//         <div data-state="open" class="fixed inset-0 z-[1000] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-auto" data-aria-hidden="true" aria-hidden="true"></div>

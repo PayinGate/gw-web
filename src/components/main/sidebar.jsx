@@ -1,7 +1,7 @@
 import classNames from "classnames"
+import { LayoutDashboard, Settings } from "lucide-react"
 import { BiLogoBitcoin } from "react-icons/bi"
 import { BsPeople } from "react-icons/bs"
-import { MdOutlineSpaceDashboard } from "react-icons/md"
 import { RiReceiptLine } from "react-icons/ri"
 import { NavLink } from "react-router-dom"
 
@@ -10,7 +10,7 @@ export default function SideBar(){
         {
             title: "Overview",
             path: "/home",
-            icon: <MdOutlineSpaceDashboard />
+            icon: <LayoutDashboard size={18} />
         },
         {
             title: "Transactions",
@@ -21,7 +21,13 @@ export default function SideBar(){
             title: "Customers",
             path: "/customers",
             icon: <BsPeople />
-        }
+        },
+        {
+            title: "Settings",
+            path: "/settings",
+            icon: <Settings size={16} />
+        },
+        
     ]
     return <div className="dark:bg-[#292b2d] bg-[#f5f5f5] h-full fixed z-40 md:w-[14rem] transition-all md:border-r-[1px] dark:border-[#3e3e3e] p-4 border-[#e6e6e6] flex flex-col gap-6">
         <div className="flex items-center gap-3 px-2">
@@ -38,7 +44,7 @@ export default function SideBar(){
                         return (
                             <div className="flex w-full items-center gap-2 ">
                                 <span className="text-[18px]">{value.icon}</span>
-                                <span className="text-[14px] font-dmsans font-bold">{value.title}</span>
+                                <span className="text-[14px] font-dmsans">{value.title}</span>
                             </div>
                         );
                     }}

@@ -11,7 +11,7 @@ export default function AppMain(){
             <div className="flex h-full">
                 <SideBar />
                 <div className="md:h-full top-[52px] pl-[14rem] flex-1 fixed flex-grow min-w-0 overflow-y-scroll w-full">
-                    <div className="min-h-full w-full p-3 relative overflow-auto">
+                    <div className="min-h-full w-full py-3 px-4 relative overflow-auto">
                         <Outlet />
                     </div>
                 </div>

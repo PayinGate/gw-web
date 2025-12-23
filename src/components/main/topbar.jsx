@@ -12,7 +12,7 @@ export default function TopBar(){
                 style={{ width: "calc(100% - 14rem)" }}>
         <div className="w-[20rem] py-1 rounded-2xl  flex gap-2 items-center">
             <span><IoSearch className="text-[18px] text-[#4f4f4f]" /></span>
-            <input className="w-full bg-transparent font-dmsans placeholder:font-semibold outline-none text-[14px]" placeholder="Search..."/>
+            <input className="w-full bg-transparent font-dmsans placeholder:font-normal outline-none text-[14px]" placeholder="Search transactions, customers..."/>
         </div>
 
         <div className="flex items-center gap-5 select-none ml-auto">

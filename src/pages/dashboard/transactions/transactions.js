@@ -2,7 +2,7 @@ import { FaEllipsis } from "react-icons/fa6";
 import toTwoDecimalPlaces from "../../../utils/to2dp";
 import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import { CustomNavLinks } from "../customers/customers";
-import { useTransaction } from "./view_transaction";
+import { mapKeyToValue, useTransaction } from "./view_transaction";
 import { useEffect, useState } from "react";
 
 
@@ -79,7 +79,7 @@ const TABLE_FIELDS = [
 const SHORT_TABLE_FIELDS = [
     {
         heading: "Status",
-        key: "status"
+        key: "status",
     },
     {
         heading: "Amount",
@@ -137,7 +137,7 @@ export const TransactionsTable = ({shortVersion, data, filterWith} = {shortVersi
                                             let fieldValue = field.key ? transaction[field.key] || "N/A" : <div className="w-[20px]" title="View expanded"><FaEllipsis /></div>;
                                             if(field.is_currency) fieldValue = toTwoDecimalPlaces(fieldValue)
                                             if(field.is_date) fieldValue = new Date(fieldValue).toDateString();
-                                            if(field.key === "status") fieldValue = <div className={`tr_status ${fieldValue}`}>{fieldValue}</div>
+                                            if(field.key === "status") fieldValue = <div className={`tr_status ${fieldValue}`}>{mapKeyToValue(fieldValue)}</div>
                                             if(field.key === "description") fieldValue = fieldValue || "Payment"
                                             
                                             return <td className={`py-[10px] ${field.text_format || "capitalize"}`} key={key}>

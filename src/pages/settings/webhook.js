@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import { useCallback, useEffect, useState } from "react";
 import useAPI from "../../hooks/useApi";
+import { Table } from "../../components/table";
+import { PlusCircle } from "lucide-react";
 
 const CREATE_WEBHOOK_FIELDS = [
     {
@@ -14,6 +16,33 @@ const CREATE_WEBHOOK_FIELDS = [
         name: "name" 
     }
 ]
+
+const TABLE_FIELDS = [
+    {
+        heading: "URL",
+        key: "url",
+        reduce: false,
+        text_format: "lowercase"
+    },
+    {
+        heading: "Status",
+        key: "status",
+        text_format: "lowercase"
+    },
+    {
+        heading: "Events",
+        key: "events",
+        text_format: "lowercase",
+        list: true
+    },
+    {
+        heading: "Sectret Key",
+        key:"secret",
+        reduce: true,
+        text_format: "lowercase",
+        copy: true
+    }
+];
 
 export default function WebHookSettings() {
 
@@ -42,7 +71,7 @@ export default function WebHookSettings() {
 
 
 
-    return <div className="flex flex-col gap-5">
+    return <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col gap-4 p-6">
         <div className="flex items-center justify-between">
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -50,13 +79,16 @@ export default function WebHookSettings() {
                     <div className="font-semibold font-dmsans text-[10px]  bg-[#27AE601A] text-[#27ae60] rounded-md py-[2px] px-[8px]">Test</div>
                 </div>
                 <div className="font-medium text-[13px] text-[#474747] dark:text-[#cecece] font-inter">
-                    Webhooks allow your system to be notified when events occur in your account (transactions, customers, etc.). Your server will receive POST requests with event data.
+                    Configure webhook endpoints for event notifications.
                 </div>
             </div>
+            <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-[#25b19c] text-[#f7fdfc] hover:bg-[#25b19c]/90 h-10 px-4 py-2">
+                <PlusCircle size={14} />
+                <span>Create New Key</span>
+            </button>
         </div>
-        <div className="h-[0.8px] w-full bg-[#dadada] font-inter"></div>
         <div className="flex flex-col gap-5 w-full">
-            <div className="w-full">
+            {/* <div className="w-full">
                 <div className="flex flex-col gap-2 font-inter">
                     <div className="font-bold text-[16px]">Add Webhook Endpoint</div>
                     <div className="flex gap-8">
@@ -73,11 +105,12 @@ export default function WebHookSettings() {
                             }) 
                             }
                         </div>
-                        <div className="w-full">
-                            {JSON.stringify(webhooks)}
-                        </div>
                     </div>
                 </div>
+            </div> */}
+            <div className="w-full">
+                <Table fields={TABLE_FIELDS} data={webhooks} />
+                {/* {JSON.stringify(webhooks)} */}
             </div>
         </div>
         
