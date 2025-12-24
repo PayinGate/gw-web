@@ -16,7 +16,7 @@ export function ChartCard({
   chart
 }) {
   return (
-    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div class="rounded-lg border   shadow-sm">
       <div class="flex flex-col space-y-1.5 p-6">
         <h3 class="text-lg font-semibold leading-none tracking-tight">{title}</h3>
         <p class="text-sm text-muted-foreground">{desciption}</p>

@@ -36,7 +36,7 @@ export default function OverviewPage() {
         <div className="lg:col-span-2">
             <ChartCard title={"Transaction Volume"} desciption={"Last 7 days"} />
         </div>
-        <div className="lg:col-span-1">
+    8    <div className="lg:col-span-1">
             <ChartCard title={"Transaction Status"} desciption={"Distribution of transaction statuses"} />
         </div>
       </div>

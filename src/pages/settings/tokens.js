@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Button } from "../../components/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/select";
 import { isEmpty } from "../../utils/functions";
+import { showErrorToast } from "../../utils/utils";
 
 
 
@@ -52,6 +53,13 @@ const TABLE_FIELDS = [
         heading: "Created At",
         key:"created_at",
         is_date: true
+    },
+    {
+        heading: "",
+        function: true,
+        value: "Revoke",
+        text_format: "text-red-800 text-md",
+        fnArgKeys: ["id"]
     }
 ];
 
@@ -87,6 +95,7 @@ export default function APISettings(){
         fn(...args).then(fetchTokens)
             .catch((error)=>{
                 console.log(error);
+                showErrorToast(error);
             })
             .finally(()=>{
                 setTokenName("");
@@ -98,8 +107,8 @@ export default function APISettings(){
 
     const generatePublicToken = (tokenName) => doAndRefresh(generatePublic, tokenName);
     const generatePrivateToken = (tokenName) => doAndRefresh(generatePrivate, tokenName);
-    const revokePublicToken = () => doAndRefresh(revokePublic);
-    const revokePrivateToken = () => doAndRefresh(revokePrivate);
+    const revokePublicToken = (id) => {doAndRefresh(revokePublic, id) };
+    const revokePrivateToken = (id) => doAndRefresh(revokePrivate, id);
 
     const generateToken = ()=>{
         setNameError(false);
@@ -121,7 +130,7 @@ export default function APISettings(){
     };
 
 
-    return <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col gap-4 p-6">
+    return <div className="rounded-lg border   shadow-sm flex flex-col gap-4 p-6">
         <div className="flex flex-col gap-5">
         <div className="flex items-center justify-between">
             <div className="flex flex-col">
@@ -178,13 +187,13 @@ export default function APISettings(){
                   </div>
                 </div>
                 <DialogFooter>
-                  <button onClick={generateToken} type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" >Generate Key</button>
+                  <button onClick={generateToken} type="button" className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" disabled={disableGenButton}>Generate Key</button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
             {/* <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-[#25b19c] text-[#f7fdfc] hover:bg-[#25b19c]/90 h-10 px-4 py-2"><PlusCircle size={14} /><span>Create New Key</span></button> */}
         </div>
-        <div className="h-[0.8px] w-full bg-[#dadada] font-inter"></div>
+        {/* <div className="h-[0.8px] w-full bg-[#dadada] font-inter"></div>
         <div className="flex gap-5 justify-between">
             <div className="flex flex-col gap-1 w-full max-w-[49%] overflow-hidden">
                 <div className="font-medium font-dmsans text-[14px]">Private Key</div>
@@ -211,7 +220,7 @@ export default function APISettings(){
                     <button className="text-[12px] bg-[#25b19c] text-[#f7fdfc] rounded-md px-3 py-2 font-semibold font-dmsans" onClick={generatePublicToken}>Generate new public key</button>
                 </div>
             </div>
-        </div>
+        </div> */}
         
         <div className="flex flex-col gap-3">
             {/* <div className="font-bold text-[16px]">Token List Table</div> */}
@@ -225,7 +234,7 @@ export default function APISettings(){
                         </div>
                     })}
                 </div>
-                {tokens && (currentPath == "private" ? <Table fields={TABLE_FIELDS} data={tokens.private } /> : <Table fields={TABLE_FIELDS} data={tokens.public} /> )}
+                {tokens && (currentPath == "private" ? <Table fields={TABLE_FIELDS} data={tokens.private} fn={revokePrivateToken}  /> : <Table fields={TABLE_FIELDS} data={tokens.public} fn={revokePublicToken} /> )}
                 {/* <table className="w-full table-auto border-collapse">
                 <thead className="border-t-[2px] w-full border-t-[#66676a2e] font-dmsans font-medium text-[12px] uppercase text-[#76777a] dark:text-[#e6e6e6]">
                     <tr className="">
@@ -304,36 +313,65 @@ const useTokens = () => {
                 return response.data.token;
             }
             else {
-                throw new Error("An error occured while fetching tokens");
+                throw new Error("An error occured while generating tokens");
             }
         }
         catch (error) {
-            throw new Error("An error occured while fetching tokens");
+            throw new Error("An error occured while generating tokens");
         }
     }
 
     const generatePrivate = async(tokenName) => {
-        console.log(tokenName);
         try {
             const response = await genPriv('/settings/tokens/generate-token/private', {name: tokenName}, true, false);
             if(response['success'] === true) {
                 return response.data.token;
             }
             else {
-                throw new Error("An error occured while fetching tokens");
+                throw new Error("An error occured while generating token");
             }
         }
         catch (error) {
-            throw new Error("An error occured while fetching tokens");
+            throw new Error("An error occured while generating token");
         }
     }
 
     const revokePublic = async (id) => {
-
+        try {
+            const params = {
+                id: id,
+                type: "public"
+            }
+            const response = await genPriv('/settings/tokens/revoke', params, true, false);
+            if(response['success'] === true) {
+                return true;
+            }
+            else {
+                throw new Error("An error occured while revoking token");
+            }
+        }
+        catch (error) {
+            throw new Error("An error occured while revoking token");
+        }
     }
 
     const revokePrivate = async (id) => {
-
+        try {
+            const params = {
+                id: id,
+                type: "private"
+            }
+            const response = await genPriv('/settings/tokens/revoke', params, true, false);
+            if(response['success'] === true) {
+                return true;
+            }
+            else {
+                throw new Error("An error occured while revoking token");
+            }
+        }
+        catch (error) {
+            throw new Error("An error occured while revoking token");
+        }
     }
 
     return { fetch, generatePrivate, generatePublic, revokePrivate, revokePublic };

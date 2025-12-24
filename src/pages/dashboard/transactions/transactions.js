@@ -4,6 +4,8 @@ import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import { CustomNavLinks } from "../customers/customers";
 import { mapKeyToValue, useTransaction } from "./view_transaction";
 import { useEffect, useState } from "react";
+import { MetricCard } from "../../../components/overview/metric-card";
+import { ArrowLeftRight, CircleCheckBig, CircleX, Hourglass } from "lucide-react";
 
 
 export const TRANSACTION_LINKS = [
@@ -25,9 +27,51 @@ export const TRANSACTION_LINKS = [
     },
 ]
 
+const METRIC = [
+    {
+        title: "Total Transactions",
+        key: "total_txn",
+        description: "All time",
+        icon: ArrowLeftRight
+    },
+    {
+        title: "Pending",
+        key: "pending_txn",
+        description: "Awaiting confirmation",
+        icon:Hourglass
+    },
+    {
+        title: "Completed",
+        key: "completed_txn",
+        description: "Successfully processed",
+        icon: CircleCheckBig
+    },
+    {
+        title: "Cancelled",
+        key: "cancelled_txn",
+        description: "Did not complete",
+        icon: CircleX
+    },
+]
+
 export function Transactions(){
     return <div className="p-2 flex flex-col gap-3">
-        <div className="font-Archivo text-[22px] font-bold">Transactions</div>
+        <div className="flex flex-col gap-1">
+            <div className="font-Archivo text-[22px] font-bold">Transactions</div>
+            <div className="text-sm text-muted-foreground">A list of all transactions in your account.</div>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {
+            METRIC.map((metric, key)=>{
+                return <MetricCard
+                      title={metric.title}
+                      value={metric.key}
+                      description={metric.description}
+                      Icon={metric.icon}
+                    />
+            })
+        }
+        </div>
         <div className="flex flex-col gap-0">
             <CustomNavLinks links={TRANSACTION_LINKS} />
             <div className="">
@@ -105,6 +149,7 @@ const SHORT_TABLE_FIELDS = [
     }
 ];
 
+
 export const TransactionsTable = ({shortVersion, data, filterWith} = {shortVersion: false, data: [], filterWith: null}) => {
     const navigate = useNavigate();
 
@@ -122,7 +167,7 @@ export const TransactionsTable = ({shortVersion, data, filterWith} = {shortVersi
     }, [filterWith]);
 
     return (
-        <table className="w-full table-auto border-collapse">
+        <table className="w-full table-auto border-none">
             <thead className="border-t-[2px] w-full border-t-[#66676a2e] font-dmsans font-medium text-[12px] uppercase text-[#76777a] dark:text-[#e6e6e6]">
                 <tr className="">
                     {(shortVersion ? SHORT_TABLE_FIELDS : TABLE_FIELDS).map((field, key)=> <th className="py-2 text-start" key={key}>{field.heading}</th>)}

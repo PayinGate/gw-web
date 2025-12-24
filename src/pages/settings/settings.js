@@ -53,9 +53,9 @@ export function Settings() {
         //setTestMode(e.target.checked);
     }
     return <div className="flex flex-col gap-4">
-        <div class="space-y-2">
-            <div class="text-3xl font-bold">Settings</div>
-            <div class="text-[#737373]">Manage your account, business, and security settings.</div>
+        <div class="space-y-1 font-inter">
+            <div class="text-xl font-bold">Settings</div>
+            <div class="text-[#737373] text-[14px]">Manage your account, business, and security settings.</div>
         </div>
         <div className="w-full flex items-center justify-between">
             <div className="w-fit flex bg-[#f7f7f7] dark:bg-[#1a1a1a] px-2 py-1 rounded-lg items-center gap-4 text-[#323232] font-inter text-[13px]">

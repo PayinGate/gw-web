@@ -57,6 +57,7 @@ export default function WebHookSettings() {
 
     useEffect(()=>{
         fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const doAndRefresh = (fn, ...args) => {
@@ -71,7 +72,7 @@ export default function WebHookSettings() {
 
 
 
-    return <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col gap-4 p-6">
+    return <div className="rounded-lg border   shadow-sm flex flex-col gap-4 p-6">
         <div className="flex items-center justify-between">
             <div className="flex flex-col">
                 <div className="flex items-center gap-2">
@@ -84,7 +85,7 @@ export default function WebHookSettings() {
             </div>
             <button className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium bg-[#25b19c] text-[#f7fdfc] hover:bg-[#25b19c]/90 h-10 px-4 py-2">
                 <PlusCircle size={14} />
-                <span>Create New Key</span>
+                <span>Create Endpoint</span>
             </button>
         </div>
         <div className="flex flex-col gap-5 w-full">
