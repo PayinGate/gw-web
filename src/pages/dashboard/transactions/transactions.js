@@ -6,6 +6,9 @@ import { mapKeyToValue, useTransaction } from "./view_transaction";
 import { useEffect, useState } from "react";
 import { MetricCard } from "../../../components/overview/metric-card";
 import { ArrowLeftRight, CircleCheckBig, CircleX, Hourglass } from "lucide-react";
+import { trimDecimalZeros } from "../../../utils/utils";
+import { useDispatch, useSelector } from "react-redux";
+import { store, storeOverview } from "../../../context/slice";
 
 
 export const TRANSACTION_LINKS = [
@@ -55,6 +58,10 @@ const METRIC = [
 ]
 
 export function Transactions(){
+    const stats = useSelector((state) => state.transaction.overview)
+    
+
+
     return <div className="p-2 flex flex-col gap-3">
         <div className="flex flex-col gap-1">
             <div className="font-Archivo text-[22px] font-bold">Transactions</div>
@@ -65,7 +72,7 @@ export function Transactions(){
             METRIC.map((metric, key)=>{
                 return <MetricCard
                       title={metric.title}
-                      value={metric.key}
+                      value={Object.keys(stats).length > 0 ? stats[metric.key] : 0}
                       description={metric.description}
                       Icon={metric.icon}
                     />
@@ -78,6 +85,7 @@ export function Transactions(){
                 <Outlet />
             </div>
         </div>
+        <div className="h-10" />
     </div>   
 }
 
@@ -95,19 +103,20 @@ const TABLE_FIELDS = [
         is_currency: true,
         text_format: "uppercase"
     },
-    {
-        heading: "Description",
-        key: "description"
-    },
-    {
-        heading: "Channel",
-        key: "payment_channel"
-    },
+    // {
+    //     heading: "Description",
+    //     key: "description"
+    // },
+    // {
+    //     heading: "Channel",
+    //     key: "payment_channel"
+    // },
     {
         heading: "Pay Amount",
         key: "amount_to_pay",
         join_after_key: "coin",
-        text_format: "uppercase"
+        text_format: "uppercase",
+        is_pay_amount: true
     },
     {
         heading: "Chain",
@@ -136,7 +145,8 @@ const SHORT_TABLE_FIELDS = [
         heading: "Pay Amount",
         key: "amount_to_pay",
         join_after_key: "coin",
-        text_format: "uppercase"
+        text_format: "uppercase",
+        is_pay_amount: true
     },
     {
         heading: "Date",
@@ -155,13 +165,38 @@ export const TransactionsTable = ({shortVersion, data, filterWith} = {shortVersi
 
     const {fetch} = useTransaction();
     const [ transactions, setTransactions ] = useState([]);
+    const dispatch = useDispatch();
+    const txns = useSelector((state)=>{
+        switch(filterWith){
+            case "cancelled":
+              return state.transaction.cancelled_txns
+            case "completed":
+              return state.transaction.completed_txns
+            case "pending":
+              return state.transaction.pending_txns
+            default:
+              return state.transaction.all_txns
+        }
+    })
 
     const { from_customer } = useOutletContext() || {from_customer: null};
 
 
     useEffect(()=>{
+        if(!from_customer){
+            setTransactions(txns); 
+        }
+    }, [from_customer, txns])
+
+    useEffect(()=>{
         fetch({filter: filterWith || null, from_customer: from_customer}).then(({data})=>{
-            setTransactions(data); 
+            if(!from_customer){
+                dispatch(store({payload: data.txns, type: filterWith || "all"}))
+            }
+            else {
+                setTransactions(data.txns);
+            }
+            dispatch(storeOverview(data.stats));
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filterWith]);
@@ -184,7 +219,7 @@ export const TransactionsTable = ({shortVersion, data, filterWith} = {shortVersi
                                             if(field.is_date) fieldValue = new Date(fieldValue).toDateString();
                                             if(field.key === "status") fieldValue = <div className={`tr_status ${fieldValue}`}>{mapKeyToValue(fieldValue)}</div>
                                             if(field.key === "description") fieldValue = fieldValue || "Payment"
-                                            
+                                            if(field.is_pay_amount) fieldValue = trimDecimalZeros(fieldValue);
                                             return <td className={`py-[10px] ${field.text_format || "capitalize"}`} key={key}>
                                                 {field.join_before_key && transaction[field.join_before_key]} {fieldValue} {field.join_after_key && transaction[field.join_after_key]}
                                             </td>

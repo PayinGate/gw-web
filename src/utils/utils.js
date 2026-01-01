@@ -14,3 +14,11 @@ export function showErrorToast(message){
         type: "error",
     });
 }
+
+
+export function trimDecimalZeros(str) {
+    str = String(str)
+    if (!str.includes('.')) return str; 
+    str = str.replace(/\.?0+$/, '');
+    return str;
+}

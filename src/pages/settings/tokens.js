@@ -382,4 +382,4 @@ export const reduceString = (text) => {
     return text?.substring(0, 7) + "..." + text?.substring(text.length - 15) || null;
 }
 
-//         <div data-state="open" class="fixed inset-0 z-[1000] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-auto" data-aria-hidden="true" aria-hidden="true"></div>
+//         <div data-state="open" className="fixed inset-0 z-[1000] bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-auto" data-aria-hidden="true" aria-hidden="true"></div>

@@ -5,7 +5,7 @@ import useAPI from "../../../hooks/useApi"
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 import { isEmptyString, isValidEmail } from "../../../utils/functions";
 import { CookieData, createCookieDate, GWCookies } from "../../../utils/storage/cookies";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import classNames from "classnames";
 
 export default function Login(){

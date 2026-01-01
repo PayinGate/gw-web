@@ -6,6 +6,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 // import { IoCalendar, IoCalendarOutline } from "react-icons/io5";
 import { HiOutlineCalendar } from "react-icons/hi";
 import { Ban, Copy } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePersonalTxn } from "../../../context/slice";
 
 
 const STATUS_MAPPER = [
@@ -174,13 +176,20 @@ export default function ViewTransaction(){
     const params = useParams();
     const navigate = useNavigate();
     const { fetch } = useTransaction({ref: params.id});
+    const dispatch = useDispatch();
+    const personal_txns = useSelector((state) => state.transaction.personal_txns)
 
     const [ transaction, setTransaction ] = useState(null);
+    
+    useEffect(()=>{
+        setTransaction(personal_txns[params.id])
+    }, [personal_txns, params.id])
 
     useEffect(()=>{
         fetch().then(({data})=>{
             if(data){
-                setTransaction(data);
+                // setTransaction(data);
+                dispatch(updatePersonalTxn({[data.reference]: data}))
             }
         })
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,9 +204,9 @@ export default function ViewTransaction(){
 
 
     return (<div>
-        <div className="flex items-center justify-between my-4">
-            <div class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors h-9 rounded-md px-3 cursor-pointer" onClick={handleBackClick}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left mr-2 h-4 w-4"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back
+        <div className="flex items-center justify-between my-2">
+            <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors h-9 rounded-md px-3 cursor-pointer" onClick={handleBackClick}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-left mr-2 h-4 w-4"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back
             </div>
             <div className={`rounded-full  text-sm font-medium text-white   tr1_status ${transaction?.status}  flex items-center gap-2 py-1 px-3`}>
             {mapKeyToValue(transaction?.status)}
@@ -216,7 +225,7 @@ export default function ViewTransaction(){
                         {transaction && DETAILS.map((detail, key)=>{
                             if(transaction.status === "cancelled" && !detail.alwaysShow) return <></>
                             return (
-                                <div className="group">
+                                <div className="group" key={key}>
                                 <div key={key}>
                                     <div className="text-sm font-medium text-[#737373] dark:text-[#dddddd] mb-2">
                                         {detail.title}
@@ -245,7 +254,7 @@ export default function ViewTransaction(){
                                     })}
 
                               </div>
-                                <div dataOrientation="horizontal" role="none" class="shrink-0 bg-[#e5e5e5] h-[1px] my-4 w-full group-last:hidden"></div>
+                                <div dataOrientation="horizontal" role="none" className="shrink-0 bg-[#e5e5e5] h-[1px] my-4 w-full group-last:hidden"></div>
                               </div> 
                             );
                         })}
@@ -383,7 +392,7 @@ export default function ViewTransaction(){
 
 export const useTransaction = ({ref} = {}) => {
     const { get } = useAPI();
-    const fetch = async ({ filter, from_customer } = {filter: null, from_customer: null}) => {
+    const fetch = async ({ filter, from_customer } = {filter: null, from_customer: null, limit: 1}) => {
         try {
             const params = [];
             if(filter){

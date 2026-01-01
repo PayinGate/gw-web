@@ -3,18 +3,27 @@ import { Link, Outlet, useNavigate, useOutletContext, useParams } from "react-ro
 import { CustomNavLinks, useCustomer } from "./customers";
 import { TransactionsTable } from "../transactions/transactions";
 import toTwoDecimalPlaces from "../../../utils/to2dp";
+import { useDispatch, useSelector } from "react-redux";
+import { updatePersonalCustomer } from "../../../context/customer_slice";
 
 export default function ViewCustomer(){
     const params = useParams();
     const navigate = useNavigate();
     const { fetch } = useCustomer({id: params.id});
     const [ customer, setCustomer ] = useState(null);
+    const dispatch = useDispatch();
+    const personal_customers = useSelector((state) => state.customer.personal_customers)
+
     useEffect(()=>{
         fetch().then(({data})=>{
-            setCustomer(data);
+            dispatch(updatePersonalCustomer({[data.id]: data}))
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [params.id])
+
+    useEffect(()=>{
+        setCustomer(personal_customers[params.id] || null)
+    }, [params.id, personal_customers]);
 
     const handleBackClick = () => {
         navigate(-1);
@@ -24,8 +33,8 @@ export default function ViewCustomer(){
     return (
         <div>
             <div className="flex items-center justify-between">
-                <div class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors h-9 rounded-md px-3 cursor-pointer" onClick={handleBackClick}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left mr-2 h-4 w-4"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back
+                <div className="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium ring-offset-background transition-colors h-9 rounded-md px-3 cursor-pointer" onClick={handleBackClick}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-left mr-2 h-4 w-4"><path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path></svg>Back
                 </div>
             </div>
             <div className="p-3 flex gap-5 w-full">
