@@ -1,15 +1,3 @@
-'use client';
-
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from 'recharts';
-
 export function ChartCard({
   title,
   desciption,
@@ -22,7 +10,7 @@ export function ChartCard({
         <p className="text-sm text-muted-foreground">{desciption}</p>
       </div>
       <div className="p-6 pt-0">
-
+        {chart}
       </div>
     </div>
   );
