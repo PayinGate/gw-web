@@ -7,6 +7,11 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { storeStats } from '../../../context/overview_slice';
 import TransactionVolumeChart from '../../../components/overview/volume-chart';
+import { StatusChart } from '../../../components/overview/status-chart';
+// eslint-disable-next-line no-unused-vars
+import thousandSeperator from '../../../utils/thousand_seperator';
+
+
 
 
 export default function OverviewPage() {
@@ -32,8 +37,8 @@ export default function OverviewPage() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Total Transaction Volume"
-          value={`₦${stats.stats.current_month_amount}`}
-          description={`${stats.stats.mom_change_pct} from last month`}
+          value={`₦${stats.stats.current_month_amount.thousandSeperator()}`}
+          description={`${stats.stats.mom_change_pct}% from last month (₦${stats.stats.previous_month_amount.thousandSeperator()})`}
           Icon={DollarSign}
         />
         <MetricCard
@@ -44,7 +49,7 @@ export default function OverviewPage() {
         />
         <MetricCard
           title="Transactions"
-          value={stats.stats.total_transactions}
+          value={stats.stats.total_transactions.thousandSeperator()}
           description={`Today: ${stats.stats.today_transactions} / Last 7 days: ${stats.stats.last_7_days_transactions}`}
           Icon={CreditCard}
         />
@@ -60,7 +65,7 @@ export default function OverviewPage() {
             <ChartCard title={"Transaction Volume"} desciption={"Last 7 days"} chart={<TransactionVolumeChart volumeChartData={stats.volume_metric} />} />
         </div>
         <div className="lg:col-span-1">
-            <ChartCard title={"Transaction Status"} desciption={"Distribution of transaction statuses"} />
+            <ChartCard title={"Transaction Status"} desciption={"Distribution of transaction statuses"} chart={<StatusChart transactionStatusData={stats.status_metric} />} />
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
