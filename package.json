@@ -18,7 +18,7 @@
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.5",
     "web-vitals": "^2.1.4",
-    "gateway-lib": "git+https://github.com/PayingGate/web_sdk.git"
+    "gateway-lib": "git+https://github.com/PayinGate/web_sdk.git"
   },
   "scripts": {
     "start": "react-scripts start",
