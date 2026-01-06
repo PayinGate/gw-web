@@ -1,5 +1,5 @@
 {
-  "name": "gateway-pay",
+  "name": "gw-web",
   "compatibility_date": "2026-01-06",
   "assets": {
     "directory": "./build"
