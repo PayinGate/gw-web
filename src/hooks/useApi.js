@@ -15,7 +15,7 @@ const useAPI = (baseURL) => {
             const response = await requestFn(...args);
             if (response.error) {
                 setError(response.error.data);
-                throw new Error(response.error.data.message);
+                throw response.error.data.message;
             }
             return response;
         } catch (error) {

@@ -159,10 +159,10 @@ function CreateAddressUI() {
                     }
                 }
                 catch(error) {
-                    console.error('Error: ', error);
                     let message;
-                    if(errorGenAddy.message){
-                        message = errorGenAddy.message;
+                    if(error.message){
+                        console.error('Error: ', error);
+                        message = error;
                     }
                     else {
                         message = "Error fetching rate. Check internet connection";
