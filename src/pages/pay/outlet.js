@@ -3,7 +3,7 @@ import useAPI from "../../hooks/useApi";
 import { useParams } from "react-router-dom";
 import "./../../assets/styles/loader.css";
 import { DarkModeToggle } from "../../components/dark-toggle";
-import { store } from "../../context/slice";
+import { setAllowCallback, store } from "../../context/slice";
 import { useSelector, useDispatch } from "react-redux";
 import "../../utils/thousand_seperator";
 import MainPayUI from "./MainPayUI";
@@ -51,6 +51,9 @@ export default function PayOutlet(){
                 const response = await get('/api/p/transaction/fetch', { reference: id });
                 setShowLoading(false);
                 dispatch(store(response.data));
+                if(!["completed", "cancelled"].includes(response.data.status)) {
+                    dispatch(setAllowCallback(true));
+                }
             } catch (error) {
                 console.error('Error: ', error);
             }
