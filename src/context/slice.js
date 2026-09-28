@@ -4,6 +4,7 @@ import { TRANSACTION_STATES } from '../pages/pay/outlet';
 export const transactionSlice = createSlice({
   name: 'transaction',
   initialState: {
+    allowCallback: false,
     transaction: {},
     steps: [] //processes gone  through
   },
@@ -35,12 +36,19 @@ export const transactionSlice = createSlice({
 
     logStep : (state, action) => {
       state.steps = action.payload;
+    },
+
+    setAllowCallback: (state, action) => {
+      // only set if it is false
+      if(!state.allowCallback){
+        state.allowCallback = action.payload;
+      }
     }
 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { store, fetch } = transactionSlice.actions;
+export const { store, fetch, setAllowCallback } = transactionSlice.actions;
 
 export default transactionSlice.reducer;

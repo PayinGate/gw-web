@@ -5,6 +5,7 @@ import { TbExternalLink } from "react-icons/tb";
 
 function TransactionCompleteUI(props) { 
     const transactionData = useSelector((state) => state.transaction.transaction);
+    const allowCallback = useSelector((state) => state.transaction.allowCallback);
     const steps = useSelector((state) => state.transaction.steps);
 
     const [callbackCountdown, setCallbackCountdown] = useState(10);
@@ -40,17 +41,20 @@ function TransactionCompleteUI(props) {
     ];
 
     useEffect(()=>{
-        const interval =  setInterval(()=>{
-            if(callbackCountdown > 0){
-                setCallbackCountdown(callbackCountdown - 1);
-            }
-            else {
-                clearInterval(interval);
-                // window.location = transactionData["callback_url"];
-            }
-        }, 1000)
+        if(transactionData["callback_url"] && allowCallback) {
+            const interval =  setInterval(()=>{
+                if(callbackCountdown > 0){
+                    setCallbackCountdown(callbackCountdown - 1);
+                }
+                else {
+                    clearInterval(interval);
+                    window.open(transactionData["callback_url"], '_blank', 'noopener,noreferrer');
+                }
+            }, 1000)
 
-        return () => clearInterval(interval);
+            return () => clearInterval(interval);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [callbackCountdown])
 
     // send iframe message
